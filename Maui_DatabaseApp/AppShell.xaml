@@ -7,9 +7,12 @@
     xmlns:view="clr-namespace:Maui_DatabaseApp.View"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate view:FestivalsMainPageView}"
-        Route="MainPage" />
+    <FlyoutItem>
+        <ShellContent Title="Festivals" ContentTemplate="{DataTemplate view:FestivalsMainPageView}"/>
+        <ShellContent Title="Bin" ContentTemplate="{DataTemplate view:EquipmentPageView}"/>
+    </FlyoutItem>
+    <FlyoutItem>
+        <ShellContent Title="Equipment" ContentTemplate="{DataTemplate local:MainPage}"/>
+    </FlyoutItem>
 
 </Shell>

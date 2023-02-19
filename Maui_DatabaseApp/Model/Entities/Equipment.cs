@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Maui_DatabaseApp.Model.Entities;
 
@@ -17,6 +12,8 @@ internal class Equipment
 
     [Column("quantity")]
     public required int Quantity { get; set; }
+    [Column("isinbin")]
+    public required bool IsInBin { get; set; }
 
     [Column("festival")]
     [ForeignKey(nameof(Festival))]

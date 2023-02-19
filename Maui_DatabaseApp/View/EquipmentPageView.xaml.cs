@@ -2,8 +2,9 @@ namespace Maui_DatabaseApp.View;
 
 public partial class EquipmentPageView : ContentPage
 {
-	public EquipmentPageView()
+	public EquipmentPageView(EquipmentPageVM equipmentPageVM)
 	{
 		InitializeComponent();
+		BindingContext= equipmentPageVM;
 	}
 }

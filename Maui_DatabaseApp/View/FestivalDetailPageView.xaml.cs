@@ -2,8 +2,9 @@ namespace Maui_DatabaseApp.View;
 
 public partial class FestivalDetailPageView : ContentPage
 {
-	public FestivalDetailPageView()
+	public FestivalDetailPageView(FestivalDetailPageVM festivalDetailPageVM)
 	{
 		InitializeComponent();
+		BindingContext= festivalDetailPageVM;
 	}
 }

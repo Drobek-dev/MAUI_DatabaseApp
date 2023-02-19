@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Maui_DatabaseApp.Utils;
+﻿namespace Maui_DatabaseApp.Utils;
 
 internal static class NotificationDisplayer
 {
