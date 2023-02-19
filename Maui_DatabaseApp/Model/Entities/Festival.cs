@@ -2,7 +2,7 @@
 
 namespace Maui_DatabaseApp.Model.Entities;
 
-internal class Festival
+public class Festival
 {
     [Column("festivalid")]
     public Guid FestivalID { get; init; }

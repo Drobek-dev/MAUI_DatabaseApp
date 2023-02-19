@@ -2,7 +2,7 @@
 
 namespace Maui_DatabaseApp.Model.Entities;
 
-internal class Equipment
+public class Equipment
 {
     [Column("equipmentid")]
     public Guid EquipmentID { get; init; }

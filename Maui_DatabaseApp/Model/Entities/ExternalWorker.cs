@@ -2,7 +2,7 @@
 
 namespace Maui_DatabaseApp.Model.Entities;
 
-internal class ExternalWorker
+public class ExternalWorker
 {
     [Column("externalworkerid")]
     public Guid ExternalWorkerID { get; init; }

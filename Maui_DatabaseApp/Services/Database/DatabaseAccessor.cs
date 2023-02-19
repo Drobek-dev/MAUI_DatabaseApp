@@ -2,7 +2,7 @@
 
 namespace Maui_DatabaseApp.Services.Database;
 
-internal class DatabaseAccessor 
+public class DatabaseAccessor 
 {
     // Get Type Paging
     public static async Task<ObservableCollection<Festival>> GetFestivals(Guid start = new Guid(),int takeAmount = 10)
@@ -12,11 +12,11 @@ internal class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            var festivals = connector.Festivals
+            var festivals = await connector.Festivals
                 .Where(f=> f.FestivalID > start)
                 .OrderBy(f => f.FestivalID)
                 .Take(takeAmount)
-                .ToList(); // weirdly ToListAsync lasts forever...
+                .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<Festival> ret = new(festivals);
             return ret; 
             
@@ -35,12 +35,12 @@ internal class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            var eqp = connector.Equipment
+            var eqp = await connector.Equipment
                 .Where(e => e.EquipmentID > start)
                 .OrderBy(e => e.EquipmentID)
                 .Take(takeAmount)
                 .AsNoTracking()
-                .ToList(); // weirdly ToListAsync lasts forever...
+                .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<Equipment> ret = new(eqp);
             return ret;
 
@@ -58,12 +58,12 @@ internal class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            var eqp = connector.Equipment
+            var eqp = await connector.Equipment
                 .Where(e => !e.IsInBin && e.EquipmentID > start && e.FestivalID == festival.FestivalID)
                 .OrderBy(e => e.EquipmentID)
                 .Take(takeAmount)
                 .AsNoTracking()
-                .ToList(); // weirdly ToListAsync lasts forever...
+                .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<Equipment> ret = new(eqp);
             return ret;
 
@@ -81,11 +81,11 @@ internal class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            var eqp = connector.ExternaWorkers
+            var eqp = await connector.ExternaWorkers
                 .Where(ew=> ew.ExternalWorkerID > start)
                 .OrderBy(ew=>ew.ExternalWorkerID)
                 .AsNoTracking()
-                .ToList(); // weirdly ToListAsync lasts forever...
+                .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<ExternalWorker> ret = new(eqp);
             return ret;
 
@@ -104,11 +104,11 @@ internal class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            var eqp = connector.ExternaWorkers
+            var eqp = await connector.ExternaWorkers
                 .Where(ew => ew.ExternalWorkerID > start && ew.FestivalID == festival.FestivalID)
                 .OrderBy(ew => ew.ExternalWorkerID)
                 .AsNoTracking()
-                .ToList(); // weirdly ToListAsync lasts forever...
+                .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<ExternalWorker> ret = new(eqp);
             return ret;
 
@@ -127,11 +127,11 @@ internal class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            var eqp = connector.Equipment
+            var eqp = await connector.Equipment
                 .Where(e => e.EquipmentID > start && e.IsInBin)
                 .OrderBy(e=> e.EquipmentID)
                 .AsNoTracking()
-                .ToList(); // weirdly ToListAsync lasts forever...
+                .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<Equipment> ret = new(eqp);
             return ret;
 

@@ -2,10 +2,20 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Maui_DatabaseApp.ViewModel"
+             xmlns:entities="clr-namespace:Maui_DatabaseApp.Model.Entities"
              x:Class="Maui_DatabaseApp.View.FestivalsMainPageView"
              x:DataType="vm:FestivalsMainPageVM"
              Title="FestivalsMainPageView">
     <VerticalStackLayout>
-     
+        <Button Text="Load Festivals" Command="{Binding LoadFestivalsCommand}"/>
+        <CollectionView
+            ItemsSource="{Binding Festivals}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="entities:Festival">
+                    <Label Text="{Binding Name}"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            
+        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>

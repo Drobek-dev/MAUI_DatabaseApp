@@ -1,6 +1,6 @@
 ﻿namespace Maui_DatabaseApp.Services.Database;
 
-internal class DatabaseConnector : DbContext
+public class DatabaseConnector : DbContext
 {
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
