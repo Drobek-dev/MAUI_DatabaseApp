@@ -7,7 +7,7 @@ public class DatabaseAccessor
     // Get Type Paging
     public static async Task<ObservableCollection<Festival>> GetFestivals(Guid start = new Guid(),int takeAmount = 10)
     {
-        takeAmount = takeAmount < 0 ? 10 : takeAmount;
+        takeAmount = takeAmount <= 0 ? 10 : takeAmount;
         
         try
         {
@@ -52,14 +52,14 @@ public class DatabaseAccessor
             return null;
         }
     }
-    public static async Task<ObservableCollection<Equipment>> GetEquipmentFromFestival( Festival festival, Guid start = new Guid(), int takeAmount = 10)
+    public static async Task<ObservableCollection<Equipment>> GetEquipmentFromFestival( Guid festivalID, Guid start = new Guid(), int takeAmount = 10)
     {
         takeAmount = takeAmount < 0 ? 10 : takeAmount;
         try
         {
             DatabaseConnector connector = new();
             var eqp = await connector.Equipment
-                .Where(e => !e.IsInBin && e.EquipmentID > start && e.FestivalID == festival.FestivalID)
+                .Where(e => e.FestivalID == festivalID && !e.IsInBin && e.EquipmentID > start)
                 .OrderBy(e => e.EquipmentID)
                 .Take(takeAmount)
                 .AsNoTracking()
@@ -98,14 +98,14 @@ public class DatabaseAccessor
         }
     }
 
-    public static async Task<ObservableCollection<ExternalWorker>> GetExternalWorkersFromFestival(Festival festival, Guid start = new Guid(), int takeAmount = 10)
+    public static async Task<ObservableCollection<ExternalWorker>> GetExternalWorkersFromFestival(Guid festivalID, Guid start = new Guid(), int takeAmount = 10)
     {
         takeAmount = takeAmount < 0 ? 10 : takeAmount;
         try
         {
             DatabaseConnector connector = new();
             var eqp = await connector.ExternaWorkers
-                .Where(ew => ew.ExternalWorkerID > start && ew.FestivalID == festival.FestivalID)
+                .Where(ew => ew.FestivalID == festivalID && ew.ExternalWorkerID > start)
                 .OrderBy(ew => ew.ExternalWorkerID)
                 .AsNoTracking()
                 .ToListAsync(); // weirdly ToListAsync lasts forever...
@@ -144,14 +144,14 @@ public class DatabaseAccessor
         }
     }
 
-    // Get by Name
-     public static async Task<Festival> GetFestivalByName(string name)
-    {  
+    // Get by ID
+    public static async Task<Festival> GetFestivalByID(Guid ID)
+    {
         try
         {
             DatabaseConnector connector = new();
             var f = await connector.Festivals
-                .FindAsync(name);
+                .FindAsync(ID);
             return f;
 
         }
@@ -162,14 +162,34 @@ public class DatabaseAccessor
         }
     }
 
-    public static async Task<Equipment> GetEquipmentByName(string name)
+
+    // Get by Name
+    public static async Task<ObservableCollection<Festival>> GetFestivalsByName(string name)
+    {  
+        try
+        {
+            DatabaseConnector connector = new();
+            var f = await connector.Festivals
+                .Where(f => f.Name.Equals(name)).ToListAsync();
+            return new ObservableCollection<Festival>(f);
+
+        }
+        catch (Exception ex)
+        {
+            await NotificationDisplayer.DisplayNotification(ex);
+            return null;
+        }
+    }
+
+    public static async Task<ObservableCollection<Equipment>> GetEquipmentByName(string name)
     {
         try
         {
             DatabaseConnector connector = new();
             var e = await connector.Equipment
-                .FindAsync(name);
-            return e;
+                .Where( e=> e.Name.Equals(name))
+                .ToListAsync();
+            return new ObservableCollection<Equipment>(e);
 
         }
         catch (Exception ex)
@@ -179,14 +199,15 @@ public class DatabaseAccessor
         }
 
     }
-    public static async Task<ExternalWorker> GetExternalWorkerByName(string name)
+    public static async Task<ObservableCollection<ExternalWorker>> GetExternalWorkerByName(string name)
     {
         try
         {
             DatabaseConnector connector = new();
             var ew = await connector.ExternaWorkers
-                .FindAsync(name);
-            return ew;
+                .Where( ew => ew.Name.Equals(name))
+                .ToListAsync();
+            return new ObservableCollection<ExternalWorker>(ew);
 
         }
         catch (Exception ex)
@@ -198,13 +219,17 @@ public class DatabaseAccessor
     }
 
     // Equipment manipulation
-    public static async Task<bool> TryChangeEquipmentLocation(List<Equipment> equipment, Festival festivalToBeAssignedToEquipment)
+    public static async Task<bool> TryChangeEquipmentLocation(ObservableCollection<Equipment> equipment, Guid festivalIDToBeAssignedToEquipment)
     {
-        Festival f = festivalToBeAssignedToEquipment;
+        
         try
         {
             DatabaseConnector connector = new();
-            connector.AttachRange(equipment);
+            Festival f = await GetFestivalByID(festivalIDToBeAssignedToEquipment) 
+                ?? throw new Exception($"Festival with ID {festivalIDToBeAssignedToEquipment} not found." +
+                $"{Environment.NewLine}Try reloading this page.");
+
+            connector.Equipment.AttachRange(equipment);
             foreach (var e in equipment) 
             {
                 e.Festival = f;
@@ -226,7 +251,7 @@ public class DatabaseAccessor
         }
     }
 
-    public static async Task<bool> TryMoveEquipmentToBin(List<Equipment> equipment)
+    public static async Task<bool> TryMoveEquipmentToBin(ObservableCollection<Equipment> equipment)
     {
         try
         {
@@ -245,7 +270,7 @@ public class DatabaseAccessor
             return false;
         }
     }
-    public static async Task<bool> TryRestoreEquipment(List<Equipment> equipment, Festival festivalToBeAssignedToEquipment = null)
+    public static async Task<bool> TryRestoreEquipment(ObservableCollection<Equipment> equipment, Festival festivalToBeAssignedToEquipment = null)
     {
         if (equipment is null || equipment.Count == 0)
             throw new ArgumentException($"Equipment must not be null or an empty list!");

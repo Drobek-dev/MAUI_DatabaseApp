@@ -4,12 +4,14 @@ public partial class FestivalsMainPageView : ContentPage
 {
 	public FestivalsMainPageView(FestivalsMainPageVM festivalMainPageVM)
 	{
-		InitializeComponent();
+        InitializeComponent();
+		
         BindingContext= festivalMainPageVM;
 
     }
+  
 
-	
 
-	
+
+
 }

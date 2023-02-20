@@ -21,4 +21,15 @@ internal static class NotificationDisplayer
         }
         await Shell.Current.DisplayAlert("Alert", message, "Ok");
     }
+
+    internal static async Task DisplayNotificationOperationSuccessful(string operationName)
+    {
+        await Shell.Current.DisplayAlert("Confirmation", $"Operation {operationName} successful!", "Ok");
+    }
+
+    internal static async Task DisplayNotificationOperationFailed(string operationName)
+    {
+        await Shell.Current.DisplayAlert("Confirmation", $"Operation {operationName} failed!{Environment.NewLine}" +
+            $"Try reloading this page.", "Ok");
+    }
 }

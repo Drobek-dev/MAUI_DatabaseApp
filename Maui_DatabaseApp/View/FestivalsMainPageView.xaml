@@ -6,13 +6,22 @@
              x:Class="Maui_DatabaseApp.View.FestivalsMainPageView"
              x:DataType="vm:FestivalsMainPageVM"
              Title="FestivalsMainPageView">
+
     <VerticalStackLayout>
-        <Button Text="Load Festivals" Command="{Binding LoadFestivalsCommand}"/>
+
+        <Button Text="Refresh" Command="{Binding RefreshCommand}" CommandParameter="{Binding FalseValue}" IsEnabled="{Binding IsNotBusy}"/> 
+        <Button Text="Load Next Page" Command="{Binding LoadNextPageCommand}" IsEnabled="{Binding IsNotBusy}"/> 
+       
         <CollectionView
-            ItemsSource="{Binding Festivals}">
+            ItemsSource="{Binding Festivals}"
+            SelectionMode="Multiple"
+            >
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="entities:Festival">
-                    <Label Text="{Binding Name}"/>
+                    <Button 
+                        Text="{Binding Name}" 
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FestivalsMainPageVM}},Path=NavToFestivalDetailCommand}"
+                        CommandParameter="{Binding .}"/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
             

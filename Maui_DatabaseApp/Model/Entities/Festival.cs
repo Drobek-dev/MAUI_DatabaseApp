@@ -13,6 +13,6 @@ public class Festival
     [Column("startdate")]
     public required DateOnly StartDate { get; set; }
     [Column("enddate")]
-    public required DateOnly SndDate { get; set; }
+    public required DateOnly EndDate { get; set; }
 
 }
