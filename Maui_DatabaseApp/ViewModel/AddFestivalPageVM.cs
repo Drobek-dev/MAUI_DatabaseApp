@@ -1,8 +1,4 @@
-﻿    using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Maui_DatabaseApp.ViewModel;
 
@@ -11,7 +7,7 @@ public partial class AddFestivalPageVM : BaseVM
     [ObservableProperty]
     Festival newFestival;
 
-    AddFestivalPageVM() 
+    public AddFestivalPageVM() 
     {
         newFestival = new Festival
         {
@@ -22,10 +18,12 @@ public partial class AddFestivalPageVM : BaseVM
         };
         
     }
+
     [RelayCommand]
     async Task AddFestival()
     {
         IsBusy = true;
+
         if (await DatabaseAccessor.TryAddFestival(NewFestival))
         {
             await NavigateTo(Shell.Current.GoToAsync(".."));

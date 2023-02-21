@@ -21,14 +21,14 @@ public static class MauiProgram
 		builder.Services.AddSingleton<FestivalsMainPageView>(); 
 		builder.Services.AddSingleton<FestivalsMainPageVM>();
 
-		builder.Services.AddSingleton<AddFestivalPageView>();
-		builder.Services.AddSingleton<AddFestivalPageVM>();
+		builder.Services.AddTransient<AddFestivalPageView>();
+		builder.Services.AddTransient<AddFestivalPageVM>();
 
-		builder.Services.AddSingleton<AddExternalWorkerPageView>();
+		builder.Services.AddTransient<AddExternalWorkerPageView>();
 		builder.Services.AddTransient<AddExternalWorkerPageVM>();
 
-		builder.Services.AddSingleton<AddEquipmentPageView>();
-		builder.Services.AddSingleton<AddEquipmentPageVM>();
+		builder.Services.AddTransient<AddEquipmentPageView>();
+		builder.Services.AddTransient<AddEquipmentPageVM>();
 
 		builder.Services.AddTransient<FestivalDetailPageView>();
 		builder.Services.AddTransient<FestivalDetailPageVM>();

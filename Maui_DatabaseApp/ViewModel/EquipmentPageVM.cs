@@ -8,7 +8,12 @@ public partial class EquipmentPageVM : BaseVM
 	[ObservableProperty]
 	int takeAmount = 10;
 
-	int navigationLocationGlobID = -1;
+	[ObservableProperty]
+	[NotifyPropertyChangedFor(nameof(IsDisplayingEquipmentToTransfer))]
+	bool isNotDisplayingEquipmentToTransfer = true;
+
+	public bool IsDisplayingEquipmentToTransfer => !IsNotDisplayingEquipmentToTransfer; 
+
 	Guid lastID = new();
 
 	[ObservableProperty]
@@ -23,7 +28,7 @@ public partial class EquipmentPageVM : BaseVM
 	List<Guid> eqpToTransferIDs = new();
 
 
-	public Guid FestivalID;
+	public Guid FestivalID { get; init; }
 
 	bool navigatedToBin;
 	public bool NavigatedToBin
@@ -36,6 +41,7 @@ public partial class EquipmentPageVM : BaseVM
 
 			navigatedToBin = value;
 			OnPropertyChanged(nameof(NavigatedToBin));
+			OnPropertyChanged(nameof(IsThisFestivalEquipment));
 		}
 	}
 
@@ -54,7 +60,7 @@ public partial class EquipmentPageVM : BaseVM
 	}
 
 	[RelayCommand]
-	async Task LoadNextEquipment()
+	async Task LoadNextPage()
 	{
 		IsBusy = true;
 		if(NavigatedToBin)
@@ -71,6 +77,19 @@ public partial class EquipmentPageVM : BaseVM
 	}
 
 	[RelayCommand]
+	async Task PerformSearch(string substring)
+	{
+        if (string.IsNullOrWhiteSpace(substring))
+        {
+            EquipmentToDisplay = new();
+        }
+        else
+        {
+            EquipmentToDisplay = await DatabaseAccessor.GetEquipmentByNameSubstring(substring) ?? new();
+        }
+    }
+
+	[RelayCommand]
 	void MoveSelectedToTransferSection()
 	{
 		IsBusy = true;
@@ -84,20 +103,31 @@ public partial class EquipmentPageVM : BaseVM
 		}
 		IsBusy = false;
 	}
+	[RelayCommand]
+	void MoveDoubleClickedToTransferSection(Equipment e)
+	{
+		IsBusy = true;
+		if (!eqpToTransferIDs.Contains(e.EquipmentID))
+		{
+            eqpToTransferIDs.Add(e.EquipmentID);
+            EquipmentToTransfer.Add(e);
+        }
+		IsBusy = false;
+
+	}
 
 	[RelayCommand]
-	async Task NavToTransferPage()
+	async Task NavToTransferPage(bool transferToBin)
 	{
-		if (navigationLocationGlobID == Globals.InvalidValue)
-			return;
-		else if(navigationLocationGlobID == Globals.Bin)
+		
+		if(transferToBin)
 		{
 			if (await DatabaseAccessor.TryMoveEquipmentToBin(EquipmentToTransfer))
 				await NotificationDisplayer.DisplayNotificationOperationSuccessful("[Bin Tranfer]");
 			else
 				await NotificationDisplayer.DisplayNotificationOperationFailed("[Bin Transfer]");
 		}
-		else if(navigationLocationGlobID == Globals.Festival)
+		else
 		{
 			await NavigateTo(Shell.Current.GoToAsync(nameof(TransferPageView), new Dictionary<string, object>
 			{
@@ -107,6 +137,21 @@ public partial class EquipmentPageVM : BaseVM
 		}
 
     }
+
+	[RelayCommand]
+	async Task NavToAddEquipmentPage()
+	{
+		await NavigateTo(Shell.Current.GoToAsync(nameof(AddEquipmentPageView), new Dictionary<string, object>
+		{
+			["FestivalID"] = FestivalID
+		}));
+	}
+
+	[RelayCommand]
+	void ChangeDisplayMode()
+	{
+		IsNotDisplayingEquipmentToTransfer = !IsNotDisplayingEquipmentToTransfer;
+	}
 
 	[RelayCommand]
 	void ClenEquipmentToTransfer()

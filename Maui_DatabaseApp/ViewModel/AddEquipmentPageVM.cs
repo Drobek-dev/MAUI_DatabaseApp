@@ -6,19 +6,17 @@ using System.Threading.Tasks;
 
 namespace Maui_DatabaseApp.ViewModel;
 
-[QueryProperty(nameof(Festival), nameof(Festival))]
+[QueryProperty(nameof(FestivalID), nameof(FestivalID))]
 public partial class AddEquipmentPageVM: BaseVM
 {
-    public Festival Festival { get; init; }
+    public Guid FestivalID { get; init; }
     [ObservableProperty]
     Equipment newEquipment;
 
-    AddEquipmentPageVM()
+    public AddEquipmentPageVM()
     {
         newEquipment = new Equipment
-        {
-            Festival = Festival,
-            FestivalID = Festival.FestivalID,
+        { 
             Quantity = 1,
             Name = "",
             IsInBin = false
@@ -28,8 +26,10 @@ public partial class AddEquipmentPageVM: BaseVM
     [RelayCommand]
     async Task AddEquipment()
     {
+
         IsBusy = true;
 
+        NewEquipment.FestivalID = FestivalID;
         if (await DatabaseAccessor.TryAddEquipment(NewEquipment))
         {
             await NavigateTo(Shell.Current.GoToAsync(".."));

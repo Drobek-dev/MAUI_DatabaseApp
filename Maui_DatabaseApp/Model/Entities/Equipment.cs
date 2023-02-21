@@ -15,7 +15,7 @@ public class Equipment
     [Column("isinbin")]
     public required bool IsInBin { get; set; }
 
-    [Column("festival")]
+    [Column("festivalid")]
     [ForeignKey(nameof(Festival))]
     public Guid FestivalID { get; set; }
 

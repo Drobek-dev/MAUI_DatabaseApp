@@ -11,9 +11,6 @@ global using CommunityToolkit.Mvvm.Input;
 
 public static class Globals
 {
-    public const int InvalidValue = -1;
-    public const int Bin = 0;
-    public const int Festival = 1;
 
     public static DateOnly GetTodaysDayOnly()
     {

@@ -3,28 +3,63 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Maui_DatabaseApp.ViewModel"
              xmlns:entities="clr-namespace:Maui_DatabaseApp.Model.Entities"
+             xmlns:controls ="clr-namespace:Maui_DatabaseApp.Controls"
              x:Class="Maui_DatabaseApp.View.FestivalsMainPageView"
              x:DataType="vm:FestivalsMainPageVM"
              Title="FestivalsMainPageView">
 
-    <VerticalStackLayout>
+    <Grid>
 
-        <Button Text="Refresh" Command="{Binding RefreshCommand}" CommandParameter="{Binding FalseValue}" IsEnabled="{Binding IsNotBusy}"/> 
-        <Button Text="Load Next Page" Command="{Binding LoadNextPageCommand}" IsEnabled="{Binding IsNotBusy}"/> 
-       
-        <CollectionView
-            ItemsSource="{Binding Festivals}"
-            SelectionMode="Multiple"
-            >
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="entities:Festival">
-                    <Button 
-                        Text="{Binding Name}" 
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FestivalsMainPageVM}},Path=NavToFestivalDetailCommand}"
-                        CommandParameter="{Binding .}"/>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+        <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
+
+        <Grid
+            RowDefinitions="Auto,*,Auto"
+            IsVisible="{Binding IsInternetAvailable}">
+
+            <SearchBar
+                x:Name="searchBar"  
+                Grid.Row="0"
+                SearchCommand="{Binding PerformSearchCommand}"
+                SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
             
-        </CollectionView>
-    </VerticalStackLayout>
+            <ScrollView
+                Grid.Row="1">
+                <CollectionView
+                    ItemsSource="{Binding Festivals}"
+                    SelectionMode="Multiple">
+                    <CollectionView.EmptyView>
+                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="No results found!"/>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="entities:Festival">
+                            <Frame>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        NumberOfTapsRequired="2"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FestivalsMainPageVM}},Path=NavToFestivalDetailCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                                <Label Text="{Binding Name}"/>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+
+            <HorizontalStackLayout
+                Grid.Row="2">
+                <Button 
+                    Text="Refresh"
+                    Command="{Binding RefreshCommand}"
+                    CommandParameter="{Binding FalseValue}"/>
+                <Button
+                    Text=">"
+                    Command="{Binding LoadNextPageCommand}"/>
+                <Button 
+                    Text="+"
+                    Command="{Binding NavToAddNewFestivalCommand}"/>
+            </HorizontalStackLayout>
+        </Grid>
+    </Grid>
 </ContentPage>

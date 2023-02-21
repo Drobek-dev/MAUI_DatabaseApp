@@ -1,3 +1,4 @@
+
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -6,21 +7,20 @@ namespace Maui_DatabaseApp.ViewModel;
 
 public partial class FestivalsMainPageVM : BaseVM
 {
-	public bool FalseValue { get; } = false;
+	
 
     [ObservableProperty]
     int takeAmount =3;
 
     [ObservableProperty]
     ObservableCollection<Festival> festivals;
-	
+
 
 
     Guid lastID = new();
 
-	
     [RelayCommand]
-    async Task Refresh(bool calledFromNextPage = false)
+    internal async Task Refresh(bool calledFromNextPage = false)
     {
         IsBusy = true;
         Festivals = await DatabaseAccessor.GetFestivals(takeAmount: TakeAmount);
@@ -44,7 +44,6 @@ public partial class FestivalsMainPageVM : BaseVM
         IsBusy = false;
     }
 
-
     [RelayCommand]
 	async Task NavToFestivalDetail(Festival festival)
 	{
@@ -60,5 +59,19 @@ public partial class FestivalsMainPageVM : BaseVM
 	{
 		await NavigateTo(Shell.Current.GoToAsync(nameof(AddFestivalPageView)));
 	}
+
+	[RelayCommand]
+	async Task PerformSearch(string searchedName)
+	{
+        if (string.IsNullOrWhiteSpace(searchedName))
+        {
+			Festivals = new();
+        }
+        else
+        {
+            Festivals = await DatabaseAccessor.GetFestivalByNameSubstring(searchedName) ?? new();
+        }
+    }
+
 
 }

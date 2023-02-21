@@ -2,11 +2,128 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Maui_DatabaseApp.View.EquipmentPageView"
+             xmlns:controls ="clr-namespace:Maui_DatabaseApp.Controls"
+             xmlns:vm="clr-namespace:Maui_DatabaseApp.ViewModel"
+             xmlns:entities="clr-namespace:Maui_DatabaseApp.Model.Entities"
+             x:DataType="vm:EquipmentPageVM"
              Title="EquipmentPageView">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid>
+        <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
+
+        <Grid 
+            IsVisible="{Binding IsInternetAvailable}">
+            <Grid 
+                RowDefinitions="50,*,Auto,Auto"
+                IsVisible="{Binding IsNotDisplayingEquipmentToTransfer}">
+                <SearchBar
+                    x:Name="searchBar"  
+                    Grid.Row="0"
+                    SearchCommand="{Binding PerformSearchCommand}"
+                    SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
+
+                <ScrollView
+                    Grid.Row="1">
+                    <CollectionView
+                        ItemsSource="{Binding EquipmentToDisplay}"
+                        SelectionChanged="CollectionView_SelectionChanged"
+                        SelectionMode="Multiple">
+                        <CollectionView.EmptyView>
+                            <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="No results found!"/>
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="entities:Equipment">
+                                <Frame>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                            NumberOfTapsRequired="2"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:EquipmentPageVM}},Path=MoveDoubleClickedToTransferSectionCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Frame.GestureRecognizers>
+                                    <Label Text="{Binding Name}"/>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+                <HorizontalStackLayout 
+                    Grid.Row="2">
+                    <Button 
+                            Text="Refresh"
+                            Command="{Binding RefreshCommand}"
+                            CommandParameter="{Binding FalseValue}"/>
+                    <Button
+                            Text=">"
+                            Command="{Binding LoadNextPageCommand}"
+                            ToolTipProperties.Text="Load next page."/>
+                    <Button 
+                            x:Name="AddButton"
+                            Text="+"
+                            Command="{Binding NavToAddEquipmentPageCommand}"
+                            ToolTipProperties.Text="Add new equipment."/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout 
+                    Grid.Row="3">
+                    <Button
+                        Text="->"   
+                        Command="{Binding MoveSelectedToTransferSectionCommand}"
+                        ToolTipProperties.Text="Move highlited items to [Items To Transfer] section."/>
+                    <Button 
+                            Text="[Items To Transfer]"
+                            Command="{Binding ChangeDisplayModeCommand}"/>
+                    
+                </HorizontalStackLayout>
+            </Grid>
+
+            <Grid
+                RowDefinitions="*,Auto,Auto"
+                IsVisible="{Binding IsDisplayingEquipmentToTransfer}">
+                <ScrollView
+                    Grid.Row="0">
+                    <CollectionView
+                        ItemsSource="{Binding EquipmentToTransfer}"
+                        SelectionMode="Multiple">
+                        <CollectionView.EmptyView>
+                            <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="No equipment is selected."/>
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="entities:Equipment">
+                                <Frame>
+                                    <Label Text="{Binding Name}"/>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+                
+                <HorizontalStackLayout 
+                    Grid.Row="1">
+                    <ImageButton 
+                        x:Name="BinButton"
+                        Source="bin.png"
+                        Command="{Binding NavToTransferPageCommand}"
+                        CommandParameter="{Binding TrueValue}"
+                        ToolTipProperties.Text="Move [Items To Transfer] to the Bin."/>
+                    <Button 
+                        Text="Transfer"
+                        Command="{Binding NavToTransferPageCommand}"
+                        CommandParameter="{Binding FalseValue}"
+                        ToolTipProperties.Text="Move [Items To Transfer] to a Festival."/>
+
+                </HorizontalStackLayout>
+                
+                <HorizontalStackLayout 
+                    Grid.Row="2">
+                    <Button 
+                            Text="[All Equipment]"
+                            Command="{Binding ChangeDisplayModeCommand}"/>
+
+                </HorizontalStackLayout>
+
+            </Grid>
+    
+        </Grid>
+
+    </Grid>
 </ContentPage>

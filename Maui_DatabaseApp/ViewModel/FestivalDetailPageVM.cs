@@ -10,12 +10,6 @@ public partial class FestivalDetailPageVM : BaseVM
 	[RelayCommand]
 	async Task Refresh()
 	{
-		if (Festival is null)
-		{
-			await NotificationDisplayer.DisplayNotification($"Festival is Null.{Environment.NewLine}" +
-				$"Try reloading this page.");
-			return;
-		}
 		IsBusy = true;
 		Festival = await DatabaseAccessor.GetFestivalByID(Festival.FestivalID);
 
@@ -70,7 +64,10 @@ public partial class FestivalDetailPageVM : BaseVM
 	{
 		IsBusy = true;
 		if (await DatabaseAccessor.TryDeleteFestival(Festival))
+		{
 			await NotificationDisplayer.DisplayNotification($"Festival {Festival.Name} successfully deleted.");
+			await NavigateTo(Shell.Current.GoToAsync(".."));
+		}
 		else
             await NotificationDisplayer.DisplayNotification($"Error: Festival delete operation failed!{Environment.NewLine}" +
                 $"Try reloading this page.");

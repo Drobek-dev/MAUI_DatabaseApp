@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
+
 namespace Maui_DatabaseApp.Services.Database;
 
 public class DatabaseAccessor 
@@ -181,6 +182,23 @@ public class DatabaseAccessor
         }
     }
 
+    public static async Task<ObservableCollection<Festival>> GetFestivalByNameSubstring(string substring)
+    {
+        try
+        {
+            DatabaseConnector connector = new();
+            var f = await connector.Festivals
+                .Where(f => f.Name.Contains(substring)).ToListAsync();
+            return new ObservableCollection<Festival>(f);
+
+        }
+        catch (Exception ex)
+        {
+            await NotificationDisplayer.DisplayNotification(ex);
+            return null;
+        }
+    }
+ 
     public static async Task<ObservableCollection<Equipment>> GetEquipmentByName(string name)
     {
         try
@@ -188,6 +206,24 @@ public class DatabaseAccessor
             DatabaseConnector connector = new();
             var e = await connector.Equipment
                 .Where( e=> e.Name.Equals(name))
+                .ToListAsync();
+            return new ObservableCollection<Equipment>(e);
+
+        }
+        catch (Exception ex)
+        {
+            await NotificationDisplayer.DisplayNotification(ex);
+            return null;
+        }
+
+    }
+    public static async Task<ObservableCollection<Equipment>> GetEquipmentByNameSubstring(string name)
+    {
+        try
+        {
+            DatabaseConnector connector = new();
+            var e = await connector.Equipment
+                .Where(e => e.Name.Contains(name))
                 .ToListAsync();
             return new ObservableCollection<Equipment>(e);
 

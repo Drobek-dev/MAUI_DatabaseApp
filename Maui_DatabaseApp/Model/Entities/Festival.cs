@@ -2,7 +2,7 @@
 
 namespace Maui_DatabaseApp.Model.Entities;
 
-public class Festival
+public class Festival : ObservableObject
 {
     [Column("festivalid")]
     public Guid FestivalID { get; init; }
@@ -10,9 +10,34 @@ public class Festival
     public required string Name { get; set; }
     [Column("location")]
     public required string Location { get; set; }
+
+
+    DateOnly startDate;
     [Column("startdate")]
-    public required DateOnly StartDate { get; set; }
+    public required DateOnly StartDate
+    {
+        get => startDate;
+        set
+        {
+            if (value == startDate)
+                return;
+            startDate = value;
+            OnPropertyChanged(nameof(StartDate));
+        }
+    }
+
+    DateOnly endDate;
     [Column("enddate")]
-    public required DateOnly EndDate { get; set; }
+    public required DateOnly EndDate
+    {
+        get => endDate;
+        set
+        {
+            if (value == endDate)
+                return;
+            endDate = value;
+            OnPropertyChanged(nameof(EndDate));
+        }
+    }
 
 }

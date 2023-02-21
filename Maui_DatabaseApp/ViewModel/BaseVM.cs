@@ -8,13 +8,16 @@ public partial class BaseVM: ObservableObject
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     bool _isBusy;
 
-
     public bool IsNotBusy => !IsBusy;
 
+    public bool FalseValue { get; } = false;
+    public bool TrueValue { get; } = true;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsInternetNotAvailable))]
     bool isInternetAvailable;
-    
+
+    public bool IsInternetNotAvailable => !IsInternetAvailable;
 
     public BaseVM()
     {

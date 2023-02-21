@@ -19,8 +19,6 @@ public partial class AddExternalWorkerPageVM: BaseVM
     {
         newExternalWorker = new ExternalWorker
         {
-            Festival = Festival,
-            FestivalID = Festival.FestivalID,
             Function = "",
             Name = "",
             PhoneNumber = ""
@@ -31,8 +29,10 @@ public partial class AddExternalWorkerPageVM: BaseVM
     async Task AddExternalWorker()
     {
         IsBusy = true;
+        NewExternalWorker.Festival = Festival;
+        NewExternalWorker.FestivalID = Festival.FestivalID;
 
-        if(await DatabaseAccessor.TryAddExternalWorker(NewExternalWorker))
+        if (await DatabaseAccessor.TryAddExternalWorker(NewExternalWorker))
         {
             await NavigateTo(Shell.Current.GoToAsync(".."));
             await NotificationDisplayer.DisplayNotificationOperationSuccessful($"[Add external worker {NewExternalWorker.Name}]");
