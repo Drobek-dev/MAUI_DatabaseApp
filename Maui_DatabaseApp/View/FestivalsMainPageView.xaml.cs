@@ -18,7 +18,16 @@ public partial class FestivalsMainPageView : ContentPage
         await vm.Refresh();
     }
 
-
+    private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (vm is null)
+            return;
+        vm.SelectedFestivals = new();
+        foreach (var eqp in e.CurrentSelection)
+        {
+            vm.SelectedFestivals.Add((Festival)eqp);
+        }
+    }
 
 
 

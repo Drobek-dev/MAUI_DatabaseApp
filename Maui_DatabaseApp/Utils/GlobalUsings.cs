@@ -8,19 +8,23 @@ global using Microsoft.EntityFrameworkCore;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
 
+namespace Maui_DatabaseApp.Utils
+{ 
 
-public static class Globals
-{
-
-    public static DateOnly GetTodaysDayOnly()
+    public static class Globals
     {
-        return DateOnly.FromDateTime(DateTime.Now);
+
+        public static DateOnly GetTodaysDayOnly()
+        {
+            return DateOnly.FromDateTime(DateTime.Now);
+        }
+
     }
 
+    public class TargetType
+    {
+        public Guid TargetID { get; set; }
+        public string TargetName { get; set; }
+    }
 }
 
-public class TargetType
-{
-    public Guid TargetID { get; set; }
-    public string TargetName { get; set; }
-}

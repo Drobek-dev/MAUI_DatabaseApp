@@ -76,7 +76,7 @@
             </Grid>
 
             <Grid
-                RowDefinitions="*,Auto,Auto"
+                RowDefinitions="*,50,50"
                 IsVisible="{Binding IsDisplayingEquipmentToTransfer}">
                 <ScrollView
                     Grid.Row="0">
@@ -99,12 +99,9 @@
                 
                 <HorizontalStackLayout 
                     Grid.Row="1">
-                    <ImageButton 
-                        x:Name="BinButton"
-                        Source="bin.png"
-                        Command="{Binding NavToTransferPageCommand}"
-                        CommandParameter="{Binding TrueValue}"
-                        ToolTipProperties.Text="Move [Items To Transfer] to the Bin."/>
+                    <Button 
+                        Text="Clear Selection"
+                        Command="{Binding ClearEquipmentToTransferCommand}"/>
                     <Button 
                         Text="Transfer"
                         Command="{Binding NavToTransferPageCommand}"
@@ -118,7 +115,19 @@
                     <Button 
                             Text="[All Equipment]"
                             Command="{Binding ChangeDisplayModeCommand}"/>
-
+                    <ImageButton 
+                        x:Name="BinButton"
+                        Source="bin.png"
+                        Command="{Binding NavToTransferPageCommand}"
+                        CommandParameter="{Binding TrueValue}"
+                        ToolTipProperties.Text="Move [Items To Transfer] to the Bin."/>
+                    <ImageButton 
+                        x:Name="EmptyTheBinButton"
+                        Source="empty_bin.png"
+                        Command="{Binding DeleteEquipmentCommand}"
+                        
+                        ToolTipProperties.Text="Destroy [Items To Transfer]."/>
+                    
                 </HorizontalStackLayout>
 
             </Grid>

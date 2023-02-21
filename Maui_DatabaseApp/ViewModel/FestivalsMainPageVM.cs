@@ -15,7 +15,8 @@ public partial class FestivalsMainPageVM : BaseVM
     [ObservableProperty]
     ObservableCollection<Festival> festivals;
 
-
+	[ObservableProperty]
+	ObservableCollection<Festival> selectedFestivals = new();
 
     Guid lastID = new();
 
@@ -47,22 +48,27 @@ public partial class FestivalsMainPageVM : BaseVM
     [RelayCommand]
 	async Task NavToFestivalDetail(Festival festival)
 	{
+		IsBusy = true;
 		await NavigateTo(Shell.Current.GoToAsync(nameof(FestivalDetailPageView), new Dictionary<string, object>
 		{
 			["Festival"] = festival
 		})
 		);
+		IsBusy =false;
 	}
 
 	[RelayCommand]
 	async Task NavToAddNewFestival()
 	{
+		IsBusy = true;
 		await NavigateTo(Shell.Current.GoToAsync(nameof(AddFestivalPageView)));
+		IsBusy = false;
 	}
 
 	[RelayCommand]
 	async Task PerformSearch(string searchedName)
 	{
+		IsBusy= true;
         if (string.IsNullOrWhiteSpace(searchedName))
         {
 			Festivals = new();
@@ -71,7 +77,27 @@ public partial class FestivalsMainPageVM : BaseVM
         {
             Festivals = await DatabaseAccessor.GetFestivalByNameSubstring(searchedName) ?? new();
         }
+		IsBusy= false;
     }
+
+	[RelayCommand]
+	async Task DeleteFestivals()
+	{
+		IsBusy = true;
+		if(await DatabaseAccessor.TryDeleteFestivals(SelectedFestivals))
+		{
+			foreach(var f in SelectedFestivals)
+			{
+				Festivals.Remove(f);
+			}
+			await NotificationDisplayer.DisplayNotificationOperationSuccessful("[Multiple festival delete operation]");
+		}
+		else
+		{
+			await NotificationDisplayer.DisplayNotificationOperationFailed("[Multiple festival delete operation]");
+        }
+		IsBusy = true;
+	}
 
 
 }

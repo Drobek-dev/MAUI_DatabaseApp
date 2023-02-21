@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Maui_DatabaseApp.ViewModel;
 
-[QueryProperty(nameof(Festival), nameof(Festival))]
+[QueryProperty(nameof(FestivalID), nameof(FestivalID))]
 public partial class AddExternalWorkerPageVM: BaseVM
 {
-    public Festival Festival { get; init; }
+    public Guid FestivalID { get; init; }
     [ObservableProperty]
     ExternalWorker newExternalWorker;
 
-    AddExternalWorkerPageVM()
+    public AddExternalWorkerPageVM()
     {
         newExternalWorker = new ExternalWorker
         {
@@ -28,9 +28,8 @@ public partial class AddExternalWorkerPageVM: BaseVM
     [RelayCommand]
     async Task AddExternalWorker()
     {
-        IsBusy = true;
-        NewExternalWorker.Festival = Festival;
-        NewExternalWorker.FestivalID = Festival.FestivalID;
+        IsBusy = true;       
+        NewExternalWorker.FestivalID = FestivalID;
 
         if (await DatabaseAccessor.TryAddExternalWorker(NewExternalWorker))
         {

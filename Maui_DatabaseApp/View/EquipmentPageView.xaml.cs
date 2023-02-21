@@ -17,6 +17,7 @@ public partial class EquipmentPageView : ContentPage
         base.OnAppearing();
         AddButton.IsVisible = !vm.NavigatedToBin;
         BinButton.IsVisible= !vm.NavigatedToBin;
+        EmptyTheBinButton.IsVisible= vm.NavigatedToBin;
     }
     
 

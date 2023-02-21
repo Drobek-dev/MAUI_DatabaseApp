@@ -4,8 +4,11 @@ namespace Maui_DatabaseApp.ViewModel;
 
 
 [QueryProperty(nameof(EquipmentToTransfer), nameof(EquipmentToTransfer))]
+[QueryProperty(nameof(OriginalLocationFestivalID), nameof(OriginalLocationFestivalID))]
 public partial class TransferPageVM : BaseVM
 {
+	public Guid OriginalLocationFestivalID { get; init; }
+
 	[ObservableProperty]
 	ObservableCollection<Equipment> equipmentToTransfer;
 
@@ -34,8 +37,9 @@ public partial class TransferPageVM : BaseVM
 	async Task Refresh(bool calledFromNextPage = false)
 	{
 		IsBusy = true;
-		ObservableCollection<Festival> festivals = await DatabaseAccessor.GetFestivals(takeAmount:TakeAmount) ?? new();
-		FestivalsToTargets(festivals);
+		ObservableCollection<Festival> festivals = await DatabaseAccessor.GetFestivalsSuitableForTransfer(OriginalLocationFestivalID, lastID, TakeAmount) ?? new();
+
+        FestivalsToTargets(festivals);
 		IsBusy = calledFromNextPage;
 	}
 
@@ -43,7 +47,7 @@ public partial class TransferPageVM : BaseVM
 	async Task LoadNextPage()
 	{
 		IsBusy = true;
-        ObservableCollection<Festival> festivals = await DatabaseAccessor.GetFestivals(lastID, TakeAmount) ?? new();
+        ObservableCollection<Festival> festivals = await DatabaseAccessor.GetFestivalsSuitableForTransfer(OriginalLocationFestivalID,lastID,TakeAmount) ?? new();
 		
 		if (festivals.Count == 0)
 			await Refresh(true);
@@ -73,4 +77,20 @@ public partial class TransferPageVM : BaseVM
 		IsBusy = false;
 
 	}
+
+	[RelayCommand]
+	async Task PerformSearch(string substring)
+	{
+        IsBusy = true;
+        if (string.IsNullOrWhiteSpace(substring))
+        {
+            Targets = new();
+        }
+        else
+        {
+            var festivals = await DatabaseAccessor.GetFestivalsByNameSubstringForTransfer(substring, OriginalLocationFestivalID) ?? new();
+			FestivalsToTargets(festivals);
+        }
+        IsBusy = false;
+    }
 }

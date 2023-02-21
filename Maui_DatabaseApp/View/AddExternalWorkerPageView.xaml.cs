@@ -2,9 +2,20 @@ namespace Maui_DatabaseApp.View;
 
 public partial class AddExternalWorkerPageView : ContentPage
 {
-	public AddExternalWorkerPageView(AddEquipmentPageVM addEquipmentPageVM)
+    AddExternalWorkerPageVM vm; 
+	public AddExternalWorkerPageView(AddExternalWorkerPageVM addExternalWorkerPageVM)
 	{
 		InitializeComponent();
-		BindingContext = addEquipmentPageVM;
+		BindingContext = addExternalWorkerPageVM;
+        vm = addExternalWorkerPageVM;
 	}
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+    }
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+    }
 }

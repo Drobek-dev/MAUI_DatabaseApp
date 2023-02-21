@@ -14,6 +14,6 @@ public class DatabaseConnector : DbContext
    
     public DbSet<Festival> Festivals { get; init; }  
     public DbSet<Equipment> Equipment { get; init; }
-    public DbSet<ExternalWorker> ExternaWorkers { get; init; }
+    public DbSet<ExternalWorker> ExternalWorkers { get; init; }
 
 }

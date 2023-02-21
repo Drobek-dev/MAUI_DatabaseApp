@@ -51,6 +51,7 @@
 	<ItemGroup>
 	  <None Remove="Resources\Images\bin.png" />
 	  <None Remove="Resources\Images\connection_lost.png" />
+	  <None Remove="Resources\Images\empty_bin.png" />
 	</ItemGroup>
 
 	<ItemGroup>

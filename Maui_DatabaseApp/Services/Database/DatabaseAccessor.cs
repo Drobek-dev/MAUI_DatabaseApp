@@ -82,7 +82,7 @@ public class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            var eqp = await connector.ExternaWorkers
+            var eqp = await connector.ExternalWorkers
                 .Where(ew=> ew.ExternalWorkerID > start)
                 .OrderBy(ew=>ew.ExternalWorkerID)
                 .AsNoTracking()
@@ -105,7 +105,7 @@ public class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            var eqp = await connector.ExternaWorkers
+            var eqp = await connector.ExternalWorkers
                 .Where(ew => ew.FestivalID == festivalID && ew.ExternalWorkerID > start)
                 .OrderBy(ew => ew.ExternalWorkerID)
                 .AsNoTracking()
@@ -145,6 +145,48 @@ public class DatabaseAccessor
         }
     }
 
+    // Get Festivals For Transfer
+    public static async Task<ObservableCollection<Festival>> GetFestivalsSuitableForTransfer(Guid originalLocationFestivalID, Guid start = new(),  int takeAmount = 10)
+    {
+        takeAmount = takeAmount <= 0 ? 10 : takeAmount;
+
+        try
+        {
+            DatabaseConnector connector = new();
+            var festivals = await connector.Festivals
+                .Where(f => f.FestivalID > start && f.FestivalID != originalLocationFestivalID)
+                .OrderBy(f => f.FestivalID)
+                .Take(takeAmount)
+                .ToListAsync(); // weirdly ToListAsync lasts forever...
+            ObservableCollection<Festival> ret = new(festivals);
+            return ret;
+
+
+        }
+        catch (Exception ex)
+        {
+            await NotificationDisplayer.DisplayNotification(ex);
+            return null;
+        }
+    }
+    public static async Task<ObservableCollection<Festival>> GetFestivalsByNameSubstringForTransfer(string substring,Guid originalLocationFestivalID)
+    {
+        try
+        {
+            DatabaseConnector connector = new();
+            var festivals = await connector.Festivals
+                .Where(f => f.Name.Contains(substring) && f.FestivalID != originalLocationFestivalID)
+                .ToListAsync();
+            return new ObservableCollection<Festival>(festivals);
+
+        }
+        catch (Exception ex)
+        {
+            await NotificationDisplayer.DisplayNotification(ex);
+            return null;
+        }
+
+    }
     // Get by ID
     public static async Task<Festival> GetFestivalByID(Guid ID)
     {
@@ -217,13 +259,13 @@ public class DatabaseAccessor
         }
 
     }
-    public static async Task<ObservableCollection<Equipment>> GetEquipmentByNameSubstring(string name)
+    public static async Task<ObservableCollection<Equipment>> GetEquipmentByNameSubstring(string substring)
     {
         try
         {
             DatabaseConnector connector = new();
             var e = await connector.Equipment
-                .Where(e => e.Name.Contains(name))
+                .Where(e => e.Name.Contains(substring))
                 .ToListAsync();
             return new ObservableCollection<Equipment>(e);
 
@@ -240,8 +282,26 @@ public class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            var ew = await connector.ExternaWorkers
-                .Where( ew => ew.Name.Equals(name))
+            var ew = await connector.ExternalWorkers
+                .Where(ew => ew.Name.Equals(name))
+                .ToListAsync();
+            return new ObservableCollection<ExternalWorker>(ew);
+
+        }
+        catch (Exception ex)
+        {
+            await NotificationDisplayer.DisplayNotification(ex);
+            return null;
+        }
+
+    }
+    public static async Task<ObservableCollection<ExternalWorker>> GetExternalWorkersByNameSubstring(string substring)
+    {
+        try
+        {
+            DatabaseConnector connector = new();
+            var ew = await connector.ExternalWorkers
+                .Where( ew => ew.Name.Contains(substring))
                 .ToListAsync();
             return new ObservableCollection<ExternalWorker>(ew);
 
@@ -270,12 +330,7 @@ public class DatabaseAccessor
             {
                 e.Festival = f;
                 e.FestivalID = f.FestivalID;
-                if (e.IsInBin)
-                {
-                    throw new ArgumentException($"Equipment in the bin can not have its location changed!" +
-                        $"Equipment {e.Name} with ID: {e.EquipmentID} is located in the bin!" +
-                        $"Restore the equipment first to change its location.");
-                }
+                e.IsInBin = false;
             }
             await connector.SaveChangesAsync();
             return true;
@@ -373,7 +428,7 @@ public class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            await connector.ExternaWorkers.AddAsync(externalWorker);
+            await connector.ExternalWorkers.AddAsync(externalWorker);
             await connector.SaveChangesAsync();
             return true;
         }
@@ -424,7 +479,7 @@ public class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            connector.ExternaWorkers.Update(externalWorker);
+            connector.ExternalWorkers.Update(externalWorker);
             await connector.SaveChangesAsync();
             return true;
         }
@@ -452,6 +507,22 @@ public class DatabaseAccessor
         }
     }
 
+    public static async Task<bool> TryDeleteFestivals(ObservableCollection<Festival> festivals)
+    {
+        try
+        {
+            DatabaseConnector connector = new();
+            connector.Festivals.RemoveRange(festivals);
+            await connector.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            await NotificationDisplayer.DisplayNotification(ex);
+            return false;
+        }
+    }
+
     public static async Task<bool> TryDeleteEquipment(Equipment equipment)
     {
 
@@ -469,13 +540,29 @@ public class DatabaseAccessor
         }
     }
 
+    public static async Task<bool> TryDeleteMultipleEquipment(ObservableCollection<Equipment> equipment)
+    {
+
+        try
+        {
+            DatabaseConnector connector = new();
+            connector.Equipment.RemoveRange(equipment);
+            await connector.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            await NotificationDisplayer.DisplayNotification(ex);
+            return false;
+        }
+    }
     public static async Task<bool> TryDeleteExternalWorker(ExternalWorker externalWorker)
     {
 
         try
         {
             DatabaseConnector connector = new();
-            connector.ExternaWorkers.Remove(externalWorker);
+            connector.ExternalWorkers.Remove(externalWorker);
             await connector.SaveChangesAsync();
             return true;
         }

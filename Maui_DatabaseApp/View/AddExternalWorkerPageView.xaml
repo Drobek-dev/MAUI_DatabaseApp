@@ -2,11 +2,44 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Maui_DatabaseApp.View.AddExternalWorkerPageView"
+             xmlns:controls ="clr-namespace:Maui_DatabaseApp.Controls"
+             xmlns:entities ="clr-namespace:Maui_DatabaseApp.Model.Entities"
+             xmlns:vm="clr-namespace:Maui_DatabaseApp.ViewModel"
+             x:DataType="vm:AddExternalWorkerPageVM"
              Title="AddExternalWorkerPageView">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+
+    <Grid>
+        <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
+
+        <Grid
+            IsVisible="{Binding IsInternetAvailable}"
+            RowDefinitions="Auto,Auto,Auto,Auto">
+
+            <HorizontalStackLayout
+                Grid.Row="0">
+                <Label Text="Name: "/>
+                <Entry Text="{Binding NewExternalWorker.Name}"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                 Grid.Row="1">
+                <Label Text="Phone: "/>
+                <Entry Text="{Binding NewExternalWorker.PhoneNumber}"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                 Grid.Row="2">
+                <Label Text="Function: "/>
+                <Entry Text="{Binding NewExternalWorker.Function}"/>
+            </HorizontalStackLayout>
+
+            <Button
+                Grid.Row="3"
+                Text="+"
+                Command="{Binding AddExternalWorkerCommand}"/>
+
+        </Grid>
+
+    </Grid>
 </ContentPage>

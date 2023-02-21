@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Data.SqlTypes;
 
 
 namespace Maui_DatabaseApp.ViewModel;
@@ -58,21 +59,42 @@ public partial class ExternalWorkerPageVM : BaseVM
 	async Task NavToAddExternalWorker()
 	{
 		IsBusy = true;
-		await NavigateTo(Shell.Current.GoToAsync(nameof(AddExternalWorkerPageView)));
+		await NavigateTo(Shell.Current.GoToAsync(nameof(AddExternalWorkerPageView),new Dictionary<string, object>
+		{
+			["FestivalID"] = FestivalID
+		}));
         IsBusy = false;
     }
 
 	[RelayCommand]
-	async static Task DeleteExternalWorker(ExternalWorker ew)
+	async Task DeleteExternalWorker(ExternalWorker ew)
 	{
+		IsBusy = true;
 		if(await DatabaseAccessor.TryDeleteExternalWorker(ew))
 		{
 			await NotificationDisplayer.DisplayNotification($"External worker{ew.Name} succesfully deleted.");
+			ExternalWorkers.Remove(ew);
 		}
 		else
 		{
             await NotificationDisplayer.DisplayNotification($"Error: external worker operation failed!{Environment.NewLine}" +
                 $"Try reloading external workers page.");
         }
+		IsBusy = false;
 	}
+
+	[RelayCommand]
+	async Task PerformSearch(string substring)
+	{
+		IsBusy = true;	
+        if (string.IsNullOrWhiteSpace(substring))
+        {
+            ExternalWorkers = new();
+		}
+		else
+		{
+            ExternalWorkers = await DatabaseAccessor.GetExternalWorkersByNameSubstring(substring) ?? new();
+        }
+		IsBusy= false;
+    }
 }

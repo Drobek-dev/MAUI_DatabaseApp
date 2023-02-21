@@ -4,8 +4,8 @@
              xmlns:vm="clr-namespace:Maui_DatabaseApp.ViewModel"
              xmlns:entities="clr-namespace:Maui_DatabaseApp.Model.Entities"
              xmlns:controls ="clr-namespace:Maui_DatabaseApp.Controls"
-             x:Class="Maui_DatabaseApp.View.FestivalsMainPageView"
              x:DataType="vm:FestivalsMainPageVM"
+             x:Class="Maui_DatabaseApp.View.FestivalsMainPageView"
              Title="FestivalsMainPageView">
 
     <Grid>
@@ -13,7 +13,7 @@
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
 
         <Grid
-            RowDefinitions="Auto,*,Auto"
+            RowDefinitions="Auto,*,Auto,Auto"
             IsVisible="{Binding IsInternetAvailable}">
 
             <SearchBar
@@ -26,7 +26,8 @@
                 Grid.Row="1">
                 <CollectionView
                     ItemsSource="{Binding Festivals}"
-                    SelectionMode="Multiple">
+                    SelectionMode="Multiple"
+                    SelectionChanged="CollectionView_SelectionChanged">
                     <CollectionView.EmptyView>
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="No results found!"/>
                     </CollectionView.EmptyView>
@@ -56,6 +57,14 @@
                 <Button
                     Text=">"
                     Command="{Binding LoadNextPageCommand}"/>
+                
+            </HorizontalStackLayout>
+            <HorizontalStackLayout
+                Grid.Row="3">
+                <Button
+                    Text="{Binding SelectedFestivals.Count, StringFormat='Delete {0}'}"
+                    Command="{Binding DeleteFestivalsCommand}"
+                    ToolTipProperties.Text="{Binding SelectedFestivals.Count, StringFormat='Delete {0} selected festivals'}"/>
                 <Button 
                     Text="+"
                     Command="{Binding NavToAddNewFestivalCommand}"/>

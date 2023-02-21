@@ -55,7 +55,7 @@ public partial class EquipmentPageVM : BaseVM
 		else
 			EquipmentToDisplay= await DatabaseAccessor.GetEquipmentFromFestival(FestivalID, takeAmount: TakeAmount);
 
-        lastID = EquipmentToDisplay.Count == 0 ? new() : EquipmentToDisplay.First().FestivalID;
+        lastID = EquipmentToDisplay.Count == 0 ? new() : EquipmentToDisplay.Last().EquipmentID;
         IsBusy = navigatedFromLoadNext;
 	}
 
@@ -71,7 +71,7 @@ public partial class EquipmentPageVM : BaseVM
 		if (EquipmentToDisplay.Count == 0)
 			await Refresh(true);
 		else
-			lastID = EquipmentToDisplay.First().FestivalID;
+			lastID = EquipmentToDisplay.Last().EquipmentID;
 
         IsBusy = false;
 	}
@@ -123,7 +123,16 @@ public partial class EquipmentPageVM : BaseVM
 		if(transferToBin)
 		{
 			if (await DatabaseAccessor.TryMoveEquipmentToBin(EquipmentToTransfer))
-				await NotificationDisplayer.DisplayNotificationOperationSuccessful("[Bin Tranfer]");
+			{
+				await NotificationDisplayer.DisplayNotificationOperationSuccessful("[Bin Transfer]");
+				foreach(var e in EquipmentToTransfer) 
+				{
+					EquipmentToDisplay.Remove(e);
+												
+				}
+				EquipmentToTransfer = new();
+
+			}
 			else
 				await NotificationDisplayer.DisplayNotificationOperationFailed("[Bin Transfer]");
 		}
@@ -137,6 +146,25 @@ public partial class EquipmentPageVM : BaseVM
 		}
 
     }
+
+	[RelayCommand]
+	async Task DeleteEquipment()
+	{
+		IsBusy= true;
+		int delNum = EquipmentToTransfer.Count;
+		if(await DatabaseAccessor.TryDeleteMultipleEquipment(EquipmentToTransfer))
+		{
+			foreach(var e in EquipmentToTransfer) 
+			{
+				EquipmentToDisplay.Remove(e);
+			}
+			EquipmentToTransfer = new();
+			await NotificationDisplayer.DisplayNotificationOperationSuccessful($"[Delete {delNum} equipment]");
+		}
+		else
+            await NotificationDisplayer.DisplayNotificationOperationSuccessful($"[Delete {delNum} equipment]");
+        IsBusy = false;
+	}
 
 	[RelayCommand]
 	async Task NavToAddEquipmentPage()
@@ -154,7 +182,7 @@ public partial class EquipmentPageVM : BaseVM
 	}
 
 	[RelayCommand]
-	void ClenEquipmentToTransfer()
+	void ClearEquipmentToTransfer()
 	{
 		EquipmentToTransfer = new();
 		eqpToTransferIDs = new();
