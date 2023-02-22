@@ -8,7 +8,7 @@ public partial class FestivalDetailPageVM : BaseVM
 	Festival festival;
 
 	[RelayCommand]
-	async Task Refresh()
+	internal async Task Refresh()
 	{
 		IsBusy = true;
 		Festival = await DatabaseAccessor.GetFestivalByID(Festival.FestivalID);

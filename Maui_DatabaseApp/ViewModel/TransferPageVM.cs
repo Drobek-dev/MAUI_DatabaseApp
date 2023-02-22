@@ -84,7 +84,7 @@ public partial class TransferPageVM : BaseVM
         IsBusy = true;
         if (string.IsNullOrWhiteSpace(substring))
         {
-            Targets = new();
+			await Refresh();
         }
         else
         {

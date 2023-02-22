@@ -7,4 +7,6 @@ public partial class ExternalWorkerPageView : ContentPage
 		InitializeComponent();
 		BindingContext= externalWorkerPageVM;
 	}
+
+
 }

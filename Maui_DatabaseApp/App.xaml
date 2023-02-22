@@ -81,13 +81,20 @@
                 <Setter Property="ToolTipProperties.Text" Value="Must contain at least two characters."/>
             </Style>
 
-            <Style x:Key="ActivityIndicatorStyle" TargetType="ActivityIndicator">
+            <Style x:Key="BaseActivityIndicatorStyle" TargetType="ActivityIndicator">
                 <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, 
                         Dark={StaticResource PrimaryDark}}"/>
-                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="VerticalOptions" Value="Start"/>
                 <Setter Property="HorizontalOptions" Value="Center"/>
             </Style>
-            
+
+            <Style x:Key="AddingActivityIndicatorStyle" BasedOn="{StaticResource BaseActivityIndicatorStyle}" TargetType="ActivityIndicator">
+
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="Scale" Value="3"/>
+
+            </Style>
+
             <Style x:Key="CardView" TargetType="Frame">
                 <Setter Property="BorderColor" Value="#DDDDDD"/>
                 <Setter Property="HasShadow" Value="True"/>

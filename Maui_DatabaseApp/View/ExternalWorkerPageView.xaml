@@ -24,12 +24,6 @@
     <Grid>
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
 
-
-        <ActivityIndicator 
-            IsVisible="{Binding IsBusy}" 
-            IsRunning="{Binding IsBusy}" 
-            Style="{StaticResource ActivityIndicatorStyle}"/>
-
         <Grid
             IsVisible="{Binding IsInternetAvailable}"
             RowDefinitions="Auto,*,Auto"
@@ -47,7 +41,16 @@
                 <CollectionView
                     ItemsSource="{Binding ExternalWorkers}">
                     <CollectionView.EmptyView>
-                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="No results found!"/>
+                        <VerticalStackLayout>
+                            <Image Source="no_results_founf.png"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               HeightRequest="300"
+                               WidthRequest="300"/>
+                            <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="Refresh!"/>
+
+                        </VerticalStackLayout>
+
                     </CollectionView.EmptyView>
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical" Span="2"></GridItemsLayout>
@@ -122,6 +125,10 @@
                 Text="+"
                 Command="{Binding NavToAddExternalWorkerCommand}"/>
         </Grid>
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource BaseActivityIndicatorStyle}"/>
 
     </Grid>
 </ContentPage>

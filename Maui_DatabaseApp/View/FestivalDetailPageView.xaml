@@ -16,11 +16,6 @@
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
 
 
-        <ActivityIndicator 
-            IsVisible="{Binding IsBusy}" 
-            IsRunning="{Binding IsBusy}" 
-            Style="{StaticResource ActivityIndicatorStyle}"/>
-
         <Grid
             HorizontalOptions="Center"
             RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
@@ -92,6 +87,11 @@
 
 
         </Grid>
+
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource AddingActivityIndicatorStyle}"/>
         
     </Grid>
 </ContentPage>

@@ -15,7 +15,7 @@
         <ActivityIndicator 
             IsVisible="{Binding IsBusy}" 
             IsRunning="{Binding IsBusy}" 
-            Style="{StaticResource ActivityIndicatorStyle}"/>
+            Style="{StaticResource BaseActivityIndicatorStyle}"/>
         
         <Grid
             RowDefinitions="Auto,*,Auto"
@@ -33,7 +33,16 @@
                 <CollectionView
                     ItemsSource="{Binding Targets}">
                     <CollectionView.EmptyView>
-                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="No results found!"/>
+                        <VerticalStackLayout>
+                            <Image Source="no_results_founf.png"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               HeightRequest="300"
+                               WidthRequest="300"/>
+                            <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="Refresh!"/>
+
+                        </VerticalStackLayout>
+
                     </CollectionView.EmptyView>
 
                     <CollectionView.ItemTemplate>

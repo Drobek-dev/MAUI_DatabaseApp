@@ -9,9 +9,10 @@ public partial class FestivalDetailPageView : ContentPage
 		BindingContext= festivalDetailPageVM;
 		vm = festivalDetailPageVM;
 	}
-    protected override void OnAppearing()
+    async protected override void OnAppearing()
     {
         base.OnAppearing();
+		await vm.Refresh();
 		Title = vm.Festival?.Name;
     }
 }

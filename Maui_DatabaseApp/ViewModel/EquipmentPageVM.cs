@@ -46,7 +46,7 @@ public partial class EquipmentPageVM : BaseVM
 	}
 
 	[RelayCommand]
-	async Task Refresh(bool navigatedFromLoadNext = false)
+	internal async Task Refresh(bool navigatedFromLoadNext = false)
 	{
 		IsBusy = true;
 
@@ -82,7 +82,7 @@ public partial class EquipmentPageVM : BaseVM
 		IsBusy= true;
         if (string.IsNullOrWhiteSpace(substring))
         {
-            EquipmentToDisplay = new();
+			await Refresh();
         }
         else
         {

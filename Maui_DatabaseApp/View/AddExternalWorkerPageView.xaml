@@ -19,12 +19,6 @@
     <Grid>
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
 
-
-        <ActivityIndicator 
-            IsVisible="{Binding IsBusy}" 
-            IsRunning="{Binding IsBusy}" 
-            Style="{StaticResource ActivityIndicatorStyle}"/>
-
         <Grid
             HorizontalOptions="Center"
             IsVisible="{Binding IsInternetAvailable}"
@@ -58,6 +52,12 @@
                 Command="{Binding AddExternalWorkerCommand}"/>
 
         </Grid>
+
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource AddingActivityIndicatorStyle}"/>
+
 
     </Grid>
 </ContentPage>

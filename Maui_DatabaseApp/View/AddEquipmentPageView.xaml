@@ -22,7 +22,8 @@
         <ActivityIndicator 
             IsVisible="{Binding IsBusy}" 
             IsRunning="{Binding IsBusy}" 
-            Style="{StaticResource ActivityIndicatorStyle}"/>
+            Style="{StaticResource AddingActivityIndicatorStyle}"
+            VerticalOptions="Center"/>
 
         <Grid
             HorizontalOptions="Center"

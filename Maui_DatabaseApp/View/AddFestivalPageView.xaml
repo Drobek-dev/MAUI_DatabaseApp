@@ -11,10 +11,6 @@
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
 
 
-        <ActivityIndicator 
-            IsVisible="{Binding IsBusy}" 
-            IsRunning="{Binding IsBusy}" 
-            Style="{StaticResource ActivityIndicatorStyle}"/>
 
         <Grid
             HorizontalOptions="Center"
@@ -59,5 +55,9 @@
                 Command="{Binding AddFestivalCommand}"/>
 
         </Grid>
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource AddingActivityIndicatorStyle}"/>
     </Grid>
 </ContentPage>

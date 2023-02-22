@@ -69,7 +69,7 @@ public partial class FestivalsMainPageVM : BaseVM
 		IsBusy= true;
         if (string.IsNullOrWhiteSpace(searchedName))
         {
-			Festivals = new();
+			await Refresh();
         }
         else
         {
@@ -94,7 +94,7 @@ public partial class FestivalsMainPageVM : BaseVM
 		{
 			await NotificationDisplayer.DisplayNotificationOperationFailed("[Multiple festival delete operation]");
         }
-		IsBusy = true;
+		IsBusy = false;
 	}
 
 

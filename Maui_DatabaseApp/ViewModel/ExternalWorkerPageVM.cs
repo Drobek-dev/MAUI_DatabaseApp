@@ -18,7 +18,7 @@ public partial class ExternalWorkerPageVM : BaseVM
 	public Guid FestivalID { get; init; }
 
 	[RelayCommand]
-	async Task Refresh(bool calledFromNextPage = false)
+	internal async Task Refresh(bool calledFromNextPage = false)
 	{
 		IsBusy = true;
 		ExternalWorkers = await DatabaseAccessor.GetExternalWorkersFromFestival(FestivalID,takeAmount: TakeAmount) ?? new();
@@ -89,7 +89,7 @@ public partial class ExternalWorkerPageVM : BaseVM
 		IsBusy = true;	
         if (string.IsNullOrWhiteSpace(substring))
         {
-            ExternalWorkers = new();
+			await Refresh();
 		}
 		else
 		{

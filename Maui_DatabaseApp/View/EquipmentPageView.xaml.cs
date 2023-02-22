@@ -12,9 +12,10 @@ public partial class EquipmentPageView : ContentPage
         vm = equipmentPageVM;
 	}
 
-    protected override void OnAppearing()
+    async protected override void OnAppearing()
     {
         base.OnAppearing();
+        await vm.Refresh();
         AddButton.IsVisible = !vm.NavigatedToBin;
         BinButton.IsVisible= !vm.NavigatedToBin;
         EmptyTheBinButton.IsVisible= vm.NavigatedToBin;
