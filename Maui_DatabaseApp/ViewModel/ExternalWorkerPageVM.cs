@@ -8,9 +8,9 @@ namespace Maui_DatabaseApp.ViewModel;
 public partial class ExternalWorkerPageVM : BaseVM
 {
 	[ObservableProperty]
-	int takeAmount = 10;
+	int takeAmount = Globals.TAKE_AMOUNT;
 
-	[ObservableProperty]
+    [ObservableProperty]
 	ObservableCollection<ExternalWorker> externalWorkers;
 
 	Guid lastID = new Guid();
@@ -21,7 +21,7 @@ public partial class ExternalWorkerPageVM : BaseVM
 	async Task Refresh(bool calledFromNextPage = false)
 	{
 		IsBusy = true;
-		ExternalWorkers = await DatabaseAccessor.GetExternalWorkersFromFestival(FestivalID) ?? new();
+		ExternalWorkers = await DatabaseAccessor.GetExternalWorkersFromFestival(FestivalID,takeAmount: TakeAmount) ?? new();
 		lastID = ExternalWorkers.Count > 0 ? ExternalWorkers.Last().ExternalWorkerID : new();
 		IsBusy = calledFromNextPage;
 	}
@@ -43,27 +43,27 @@ public partial class ExternalWorkerPageVM : BaseVM
     async Task Update(ExternalWorker externalWorker)
 	{
 		IsBusy = true;
-		if ( await DatabaseAccessor.TryUpdateExternalWorker(externalWorker))
+        if (!IsExternalWorkerValid(externalWorker))
+            await NotificationDisplayer.DisplayNotification("All inputs must be valid to proceed...");
+
+        else if ( await DatabaseAccessor.TryUpdateExternalWorker(externalWorker))
 		{
 			await NotificationDisplayer.DisplayNotification($"External worker {externalWorker.Name} succesfully updated.");
 		}
 		else
-		{
 			await NotificationDisplayer.DisplayNotification($"Error: external worker update failed!{Environment.NewLine}" +
 				$"Try reloading external workers page.");
-		}
+
 		IsBusy = false;
 	}
 
 	[RelayCommand]
 	async Task NavToAddExternalWorker()
 	{
-		IsBusy = true;
 		await NavigateTo(Shell.Current.GoToAsync(nameof(AddExternalWorkerPageView),new Dictionary<string, object>
 		{
 			["FestivalID"] = FestivalID
 		}));
-        IsBusy = false;
     }
 
 	[RelayCommand]

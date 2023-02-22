@@ -13,7 +13,7 @@ public partial class TransferPageVM : BaseVM
 	ObservableCollection<Equipment> equipmentToTransfer;
 
 	[ObservableProperty]
-	int takeAmount;
+	int takeAmount = Globals.TAKE_AMOUNT;
 
 	Guid lastID = new();
 

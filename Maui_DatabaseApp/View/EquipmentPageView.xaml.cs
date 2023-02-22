@@ -26,10 +26,10 @@ public partial class EquipmentPageView : ContentPage
     {
         if (vm is null)
             return;
-        vm.EquipmentToTransfer = new();
+        vm.SelectedEquipment = new();
         foreach (var eqp in e.CurrentSelection)
         {
-            vm.EquipmentToTransfer.Add((Equipment)eqp);
+            vm.SelectedEquipment.Add((Equipment)eqp);
         }
     }
 }

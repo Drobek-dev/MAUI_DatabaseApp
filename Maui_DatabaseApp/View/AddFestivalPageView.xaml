@@ -9,38 +9,51 @@
              Title="AddFestivalPageView">
     <Grid>
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
+
+
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource ActivityIndicatorStyle}"/>
+
         <Grid
+            HorizontalOptions="Center"
             IsVisible="{Binding IsInternetAvailable}"
-            RowDefinitions="Auto,Auto,Auto,Auto,50">
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto">
 
             <HorizontalStackLayout
+                 Style="{StaticResource HorizontalStackLayoutStyle}"
                 Grid.Row="0">
-                <Label Text="Festival Name"/>
-                <Entry Text="{Binding NewFestival.Name}"/>
+                <Label Text="Name: " Style="{StaticResource BigWidthLabel}"/>
+                <Entry Style="{StaticResource BaseEntryStyle}" Text="{Binding NewFestival.Name}"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout
+                 Style="{StaticResource HorizontalStackLayoutStyle}"
                  Grid.Row="1">
-                <Label Text="Location"/>
-                <Entry Text="{Binding NewFestival.Location}"/>
+                <Label Text="Location" Style="{StaticResource BigWidthLabel}"/>
+                <Entry Style="{StaticResource BaseEntryStyle}" Text="{Binding NewFestival.Location}"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout
+                 Style="{StaticResource HorizontalStackLayoutStyle}"
                  Grid.Row="2">
-                <Label Text="Begin Date:"/>
+                <Label Text="Begin Date:" Style="{StaticResource BigWidthLabel}"/>
                 <DatePicker 
                     Date="{Binding NewFestival.StartDate, Converter={StaticResource dateOnlyToDateTimeConverter}}"
                     MaximumDate="{Binding NewFestival.EndDate,Converter={StaticResource dateOnlyToDateTimeConverter}}"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout
+                 Style="{StaticResource HorizontalStackLayoutStyle}"
                  Grid.Row="3">
-                <Label Text="End Date:"/>
+                <Label Text="End Date:" Style="{StaticResource BigWidthLabel}"/>
                 <DatePicker
                     Date="{Binding NewFestival.EndDate, Converter={StaticResource dateOnlyToDateTimeConverter}}"/>
             </HorizontalStackLayout>
 
-            <Button
+            <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}"
+                    WidthRequest="50"
                 Grid.Row="4"
                 Text="+"
                 Command="{Binding AddFestivalCommand}"/>

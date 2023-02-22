@@ -28,10 +28,14 @@ public partial class AddExternalWorkerPageVM: BaseVM
     [RelayCommand]
     async Task AddExternalWorker()
     {
-        IsBusy = true;       
+        IsBusy = true;
         NewExternalWorker.FestivalID = FestivalID;
 
-        if (await DatabaseAccessor.TryAddExternalWorker(NewExternalWorker))
+        if (!IsExternalWorkerValid(NewExternalWorker))
+            await NotificationDisplayer.DisplayNotification("All inputs must be valid to proceed...");
+        
+
+        else if (await DatabaseAccessor.TryAddExternalWorker(NewExternalWorker))
         {
             await NavigateTo(Shell.Current.GoToAsync(".."));
             await NotificationDisplayer.DisplayNotificationOperationSuccessful($"[Add external worker {NewExternalWorker.Name}]");

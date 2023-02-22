@@ -10,7 +10,7 @@ public partial class FestivalsMainPageVM : BaseVM
 	
 
     [ObservableProperty]
-    int takeAmount =3;
+    int takeAmount = Globals.TAKE_AMOUNT;
 
     [ObservableProperty]
     ObservableCollection<Festival> festivals;
@@ -48,13 +48,11 @@ public partial class FestivalsMainPageVM : BaseVM
     [RelayCommand]
 	async Task NavToFestivalDetail(Festival festival)
 	{
-		IsBusy = true;
 		await NavigateTo(Shell.Current.GoToAsync(nameof(FestivalDetailPageView), new Dictionary<string, object>
 		{
 			["Festival"] = festival
 		})
 		);
-		IsBusy =false;
 	}
 
 	[RelayCommand]

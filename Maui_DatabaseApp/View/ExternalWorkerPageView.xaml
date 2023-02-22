@@ -4,59 +4,91 @@
              x:Class="Maui_DatabaseApp.View.ExternalWorkerPageView"
              xmlns:controls ="clr-namespace:Maui_DatabaseApp.Controls"
              xmlns:entities ="clr-namespace:Maui_DatabaseApp.Model.Entities"
+             xmlns:utils ="clr-namespace:Maui_DatabaseApp.Utils"
              xmlns:vm="clr-namespace:Maui_DatabaseApp.ViewModel"
              x:DataType="vm:ExternalWorkerPageVM"
              Title="ExternalWorkerPageView">
+    <ContentPage.Resources>
+        <Style x:Key="LocalFrameStyle" TargetType="Frame" BasedOn="{StaticResource CardView}">
+            <Setter Property="WidthRequest" Value="390"/>
+            <Setter Property="HeightRequest" Value="180"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
 
+        <Style x:Key="PhoneEntryStyle" BasedOn="{StaticResource BaseEntryStyle}" TargetType="Entry">
+            <Setter Property="utils:PhoneStringValidationBehaviorStyle.AttachBehavior" Value="true" />
+            <Setter Property="ToolTipProperties.Text" Value="Must be a possibly valid phone number."/>
+        </Style>
+    </ContentPage.Resources>
+    
     <Grid>
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
-        
+
+
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource ActivityIndicatorStyle}"/>
+
         <Grid
             IsVisible="{Binding IsInternetAvailable}"
-            RowDefinitions="Auto,*,Auto">
+            RowDefinitions="Auto,*,Auto"
+            ColumnDefinitions="*,*">
             <SearchBar
                 x:Name="searchBar"  
                 Grid.Row="0"
+                Grid.ColumnSpan="2"
                 SearchCommand="{Binding PerformSearchCommand}"
-                SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
+                SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}" 
+                Style="{StaticResource BaseSearchBar}"/>
             <ScrollView
-                Grid.Row="1">
+                Grid.Row="1"
+                Grid.ColumnSpan="2">
                 <CollectionView
                     ItemsSource="{Binding ExternalWorkers}">
                     <CollectionView.EmptyView>
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="No results found!"/>
                     </CollectionView.EmptyView>
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2"></GridItemsLayout>
+                    </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="entities:ExternalWorker">
-                            <Frame>
+                            <Frame Style="{StaticResource LocalFrameStyle}">
                                 <Grid 
                                     ColumnDefinitions="Auto,Auto">
                                     
                                     <VerticalStackLayout 
                                         Grid.Column="0">
                                         <HorizontalStackLayout>
-                                            <Label Text="Name: "/>
-                                            <Entry Text="{Binding Name}"/>
+                                            <Label Text="Name: " Style="{StaticResource BigWidthLabel}"/>
+                                            <Entry Style="{StaticResource BaseEntryStyle}" Text="{Binding Name}"/>
                                         </HorizontalStackLayout>
 
                                         <HorizontalStackLayout>
-                                            <Label Text="Function: "/>
-                                            <Entry Text="{Binding Function}"/>
+                                            <Label Text="Function: " Style="{StaticResource BigWidthLabel}"/>
+                                            <Entry Style="{StaticResource BaseEntryStyle}" Text="{Binding Function}"/>
                                         </HorizontalStackLayout>
 
                                         <HorizontalStackLayout>
-                                            <Label Text="Phone"/>
-                                            <Entry Text="{Binding PhoneNumber}"/>
+                                            <Label Text="Phone: " Style="{StaticResource BigWidthLabel}"/>
+                                            <Entry Style="{StaticResource PhoneEntryStyle}" Text="{Binding PhoneNumber}"/>
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
 
                                 <VerticalStackLayout
+                                    Margin="10,0,0,0"
+                                    VerticalOptions="Center"
                                     Grid.Column="1">
-                                    <Button
+                                    <Button  
+                                        IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type vm:ExternalWorkerPageVM}},Path=IsNotBusy}"
+                                        Style="{StaticResource ButtonOutline}"
                                         Text="Update"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExternalWorkerPageVM}},Path=UpdateCommand}"
                                         CommandParameter="{Binding .}"/>
                                     <Button
+                                        IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type vm:ExternalWorkerPageVM}},Path=IsNotBusy}"
+                                        Style="{StaticResource ButtonOutline}"
                                         Text="Delete"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExternalWorkerPageVM}},Path=DeleteExternalWorkerCommand}"
                                         CommandParameter="{Binding .}"/>
@@ -68,19 +100,27 @@
                 </CollectionView>
             </ScrollView>
             <HorizontalStackLayout
-                Grid.Row="2">
-                <Button
+                Grid.Row="2"
+                Grid.Column="0">
+                <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}"
                     Text="Refresh"
                     Command="{Binding RefreshCommand}"
                     CommandParameter="{Binding FalseValue}"/>
-                <Button
+                <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}"
                     Text=">"
                     Command="{Binding LoadNextPageCommand}"/>
-                <Button
-                    Text="+"
-                    Command="{Binding NavToAddExternalWorkerCommand}"/>
+         
 
             </HorizontalStackLayout>
+            <Button 
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                WidthRequest="50"
+                
+                IsEnabled="{Binding IsNotBusy}"  
+                Style="{StaticResource ButtonOutline}"
+                Text="+"
+                Command="{Binding NavToAddExternalWorkerCommand}"/>
         </Grid>
 
     </Grid>

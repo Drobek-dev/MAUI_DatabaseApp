@@ -6,61 +6,90 @@
              xmlns:vm="clr-namespace:Maui_DatabaseApp.ViewModel"
              x:DataType="vm:FestivalDetailPageVM"
              Title="FestivalDetailPageView">
-
+    <ContentPage.Resources>
+        <Style x:Key="LocalLabel" TargetType="Label" BasedOn="{StaticResource BigLabel}">
+            <Setter Property="WidthRequest" Value="100"/>
+        </Style>
+    </ContentPage.Resources>
     <Grid>
 
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
 
+
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource ActivityIndicatorStyle}"/>
+
         <Grid
-            RowDefinitions="Auto,Auto,Auto,Auto,*,*">
+            HorizontalOptions="Center"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+            ColumnDefinitions="*,*">
 
             <HorizontalStackLayout
-                Grid.Row="0">
-                <Label Text="Festival Name"/>
-                <Entry Text="{Binding Festival.Name}"/>
+                Style="{StaticResource HorizontalStackLayoutStyle}"
+                Grid.Row="0"
+                Grid.ColumnSpan="2">
+                <Label Text="Name: " Style="{StaticResource LocalLabel}"/>
+                <Entry Style="{StaticResource BaseEntryStyle}" Text="{Binding Festival.Name}"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout
-                 Grid.Row="1">
-                <Label Text="Location"/>
-                <Entry Text="{Binding Festival.Location}"/>
+                Style="{StaticResource HorizontalStackLayoutStyle}"
+                 Grid.Row="1"
+                Grid.ColumnSpan="2">
+                <Label Text="Location" WidthRequest="100" Style="{StaticResource LocalLabel}"/>
+                <Entry Style="{StaticResource BaseEntryStyle}" Text="{Binding Festival.Location}"/>
             </HorizontalStackLayout>
             
             <HorizontalStackLayout
-                 Grid.Row="2">
-                <Label Text="Begin Date:"/>
+                Style="{StaticResource HorizontalStackLayoutStyle}"
+                 Grid.Row="2"
+                Grid.ColumnSpan="2">
+                <Label Text="Begin Date:" Style="{StaticResource LocalLabel}"/>
                 <DatePicker 
                     Date="{Binding Festival.StartDate, Converter={StaticResource dateOnlyToDateTimeConverter}}"
                     MaximumDate="{Binding Festival.EndDate,Converter={StaticResource dateOnlyToDateTimeConverter}}"/>
             </HorizontalStackLayout>
             
             <HorizontalStackLayout
-                 Grid.Row="3">
-                <Label Text="End Date:"/>
+                Style="{StaticResource HorizontalStackLayoutStyle}"
+                 Grid.Row="3"
+                Grid.ColumnSpan="2">
+                <Label Text="End Date:" Style="{StaticResource LocalLabel}"/>
                 <DatePicker
                     Date="{Binding Festival.EndDate, Converter={StaticResource dateOnlyToDateTimeConverter}}"/>
             </HorizontalStackLayout>
 
-            <HorizontalStackLayout
-                Grid.Row="4">
-                <Button
-                    Text="External Workers"
-                    Command="{Binding NavToExternalWorkersCommand}"/>
-                <Button
-                    Text="Equipment"
-                    Command="{Binding NavToEquipmentCommand}"/>
-            </HorizontalStackLayout>
-
-            <HorizontalStackLayout
-                Grid.Row="5">
-                <Button
+            <VerticalStackLayout
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="0,50,0,0">
+                <Button IsEnabled="{Binding IsNotBusy}"  
+                    
+                    Style="{StaticResource ButtonOutline}"
                     Text="Save"
                     Command="{Binding UpdateCommand}"/>
-                <Button
+                <Button 
+                    
+                    IsEnabled="{Binding IsNotBusy}"  
+                    Style="{StaticResource ButtonOutline}"
                     Text="Delete"
                     Command="{Binding DeleteFestivalCommand}"/>
 
-            </HorizontalStackLayout>
+            </VerticalStackLayout>
+            <VerticalStackLayout
+                Grid.Row="4"
+                Grid.Column="0"
+                Margin="0,50,0,0">
+                <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}"
+                    Text="External Workers"
+                    Command="{Binding NavToExternalWorkersCommand}"/>
+                <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}"
+                    Text="Equipment"
+                    Command="{Binding NavToEquipmentCommand}"/>
+            </VerticalStackLayout>
+
 
         </Grid>
         

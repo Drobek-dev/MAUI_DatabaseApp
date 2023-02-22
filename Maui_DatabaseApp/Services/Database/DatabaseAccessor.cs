@@ -86,6 +86,7 @@ public class DatabaseAccessor
                 .Where(ew=> ew.ExternalWorkerID > start)
                 .OrderBy(ew=>ew.ExternalWorkerID)
                 .AsNoTracking()
+                .Take(takeAmount)
                 .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<ExternalWorker> ret = new(eqp);
             return ret;
@@ -108,6 +109,7 @@ public class DatabaseAccessor
             var eqp = await connector.ExternalWorkers
                 .Where(ew => ew.FestivalID == festivalID && ew.ExternalWorkerID > start)
                 .OrderBy(ew => ew.ExternalWorkerID)
+                .Take(takeAmount)
                 .AsNoTracking()
                 .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<ExternalWorker> ret = new(eqp);
@@ -131,6 +133,7 @@ public class DatabaseAccessor
             var eqp = await connector.Equipment
                 .Where(e => e.EquipmentID > start && e.IsInBin)
                 .OrderBy(e=> e.EquipmentID)
+                .Take(takeAmount)
                 .AsNoTracking()
                 .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<Equipment> ret = new(eqp);
@@ -157,6 +160,7 @@ public class DatabaseAccessor
                 .Where(f => f.FestivalID > start && f.FestivalID != originalLocationFestivalID)
                 .OrderBy(f => f.FestivalID)
                 .Take(takeAmount)
+                .AsNoTracking()
                 .ToListAsync(); // weirdly ToListAsync lasts forever...
             ObservableCollection<Festival> ret = new(festivals);
             return ret;
@@ -213,7 +217,7 @@ public class DatabaseAccessor
         {
             DatabaseConnector connector = new();
             var f = await connector.Festivals
-                .Where(f => f.Name.Equals(name)).ToListAsync();
+                .Where(f => f.Name.Equals(name)).AsNoTracking().ToListAsync();
             return new ObservableCollection<Festival>(f);
 
         }
@@ -230,7 +234,7 @@ public class DatabaseAccessor
         {
             DatabaseConnector connector = new();
             var f = await connector.Festivals
-                .Where(f => f.Name.Contains(substring)).ToListAsync();
+                .Where(f => f.Name.Contains(substring)).AsNoTracking().ToListAsync();
             return new ObservableCollection<Festival>(f);
 
         }
@@ -248,6 +252,7 @@ public class DatabaseAccessor
             DatabaseConnector connector = new();
             var e = await connector.Equipment
                 .Where( e=> e.Name.Equals(name))
+                .AsNoTracking()
                 .ToListAsync();
             return new ObservableCollection<Equipment>(e);
 
@@ -266,6 +271,7 @@ public class DatabaseAccessor
             DatabaseConnector connector = new();
             var e = await connector.Equipment
                 .Where(e => e.Name.Contains(substring))
+                .AsNoTracking()
                 .ToListAsync();
             return new ObservableCollection<Equipment>(e);
 
@@ -302,6 +308,7 @@ public class DatabaseAccessor
             DatabaseConnector connector = new();
             var ew = await connector.ExternalWorkers
                 .Where( ew => ew.Name.Contains(substring))
+                .AsNoTracking()
                 .ToListAsync();
             return new ObservableCollection<ExternalWorker>(ew);
 
@@ -347,7 +354,7 @@ public class DatabaseAccessor
         try
         {
             DatabaseConnector connector = new();
-            connector.AttachRange(equipment);
+            connector.Equipment.AttachRange(equipment);
             foreach (var e in equipment)
             {
                 e.IsInBin = true;
@@ -377,6 +384,7 @@ public class DatabaseAccessor
                 e.FestivalID= festivalID;
                 e.Festival = festival;
             }
+            connector.Equipment.AttachRange(equipment);
             await connector.SaveChangesAsync();
             return true;
         }

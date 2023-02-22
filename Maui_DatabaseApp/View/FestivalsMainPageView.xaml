@@ -11,19 +11,28 @@
     <Grid>
 
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
-
+        
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource ActivityIndicatorStyle}"/>
+        
         <Grid
             RowDefinitions="Auto,*,Auto,Auto"
+            ColumnDefinitions="*,*"
             IsVisible="{Binding IsInternetAvailable}">
 
             <SearchBar
                 x:Name="searchBar"  
                 Grid.Row="0"
+                Grid.ColumnSpan="2"
                 SearchCommand="{Binding PerformSearchCommand}"
-                SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
+                SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}" 
+                Style="{StaticResource BaseSearchBar}"/>
             
             <ScrollView
-                Grid.Row="1">
+                Grid.Row="1"
+                Grid.ColumnSpan="2">
                 <CollectionView
                     ItemsSource="{Binding Festivals}"
                     SelectionMode="Multiple"
@@ -32,43 +41,61 @@
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="No results found!"/>
                     </CollectionView.EmptyView>
 
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2"></GridItemsLayout>
+                    </CollectionView.ItemsLayout>
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="entities:Festival">
-                            <Frame>
+                            <Frame
+                                Style="{StaticResource CardView}">
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer 
                                         NumberOfTapsRequired="2"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FestivalsMainPageVM}},Path=NavToFestivalDetailCommand}"
                                         CommandParameter="{Binding .}"/>
                                 </Frame.GestureRecognizers>
-                                <Label Text="{Binding Name}"/>
+                                <VerticalStackLayout VerticalOptions="Center">
+                                    <Label Style="{StaticResource BigLabel}" VerticalTextAlignment="Start"  Text="{Binding Name}"/>
+                                    <Label Style="{StaticResource SmallLabel}" VerticalTextAlignment="Center" Text="{Binding Location, StringFormat='Location: {0}'}"/>
+                                    
+                                </VerticalStackLayout>
+                                
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </ScrollView>
 
-            <HorizontalStackLayout
-                Grid.Row="2">
-                <Button 
+            
+                <HorizontalStackLayout
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    HorizontalOptions="Start">
+                <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}" 
                     Text="Refresh"
                     Command="{Binding RefreshCommand}"
-                    CommandParameter="{Binding FalseValue}"/>
-                <Button
+                    CommandParameter="{Binding FalseValue}"
+                    TextColor="{AppThemeBinding Light={StaticResource LabelText}, 
+                        Dark={StaticResource LabelTextDark}}"/>
+                <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}"
                     Text=">"
                     Command="{Binding LoadNextPageCommand}"/>
                 
-            </HorizontalStackLayout>
-            <HorizontalStackLayout
-                Grid.Row="3">
-                <Button
-                    Text="{Binding SelectedFestivals.Count, StringFormat='Delete {0}'}"
-                    Command="{Binding DeleteFestivalsCommand}"
-                    ToolTipProperties.Text="{Binding SelectedFestivals.Count, StringFormat='Delete {0} selected festivals'}"/>
-                <Button 
-                    Text="+"
-                    Command="{Binding NavToAddNewFestivalCommand}"/>
-            </HorizontalStackLayout>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalOptions="End">
+                    <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}"
+                        Text="{Binding SelectedFestivals.Count, StringFormat='Delete {0}'}"
+                        Command="{Binding DeleteFestivalsCommand}"
+                        ToolTipProperties.Text="{Binding SelectedFestivals.Count, StringFormat='Delete {0} selected festivals'}"/>
+                    <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}" 
+                        Text="+"
+                        Command="{Binding NavToAddNewFestivalCommand}"/>
+                </HorizontalStackLayout>
+         
         </Grid>
     </Grid>
 </ContentPage>

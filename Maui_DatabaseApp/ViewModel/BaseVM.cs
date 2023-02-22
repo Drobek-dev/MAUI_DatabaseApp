@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Runtime.CompilerServices;
 
 namespace Maui_DatabaseApp.ViewModel;
 
@@ -56,4 +58,31 @@ public partial class BaseVM: ObservableObject
         await navTask;
         IsBusy = false;
     }
+
+    protected static bool IsFestivalInputValid(Festival f)
+    {
+        return
+            IsStringNameEntryValid(f.Name) &&
+            IsStringNameEntryValid(f.Location);
+    }
+
+    protected static bool IsExternalWorkerValid(ExternalWorker ew)
+    {
+        return IsStringNameEntryValid(ew.Name) &&
+            IsStringNameEntryValid(ew.Function) &&
+            IsStringPhoneNumberValid(ew.PhoneNumber);
+    }
+
+    protected static bool IsEquipmentInputValid(Equipment e)
+    {
+        return
+            IsStringNameEntryValid(e.Name);
+
+    }
+
+    static private bool IsStringNameEntryValid(string input) => input.Length >= 2;
+
+    static private bool IsStringPhoneNumberValid(string input) => Globals.MyPhoneRegex().IsMatch(input);
+           
+   
 }

@@ -24,7 +24,10 @@ public partial class AddFestivalPageVM : BaseVM
     {
         IsBusy = true;
 
-        if (await DatabaseAccessor.TryAddFestival(NewFestival))
+        if (!IsFestivalInputValid(NewFestival))
+            await NotificationDisplayer.DisplayNotification("All inputs must be valid to proceed...");
+  
+        else if (await DatabaseAccessor.TryAddFestival(NewFestival))
         {
             await NavigateTo(Shell.Current.GoToAsync(".."));
             await NotificationDisplayer.DisplayNotificationOperationSuccessful($"[Add festival {NewFestival.Name}]");

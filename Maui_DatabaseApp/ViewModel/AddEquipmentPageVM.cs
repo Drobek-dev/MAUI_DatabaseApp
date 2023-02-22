@@ -26,11 +26,13 @@ public partial class AddEquipmentPageVM: BaseVM
     [RelayCommand]
     async Task AddEquipment()
     {
-
         IsBusy = true;
-
         NewEquipment.FestivalID = FestivalID;
-        if (await DatabaseAccessor.TryAddEquipment(NewEquipment))
+
+        if (!IsEquipmentInputValid(NewEquipment))
+            await NotificationDisplayer.DisplayNotification("All inputs must be valid to proceed...");
+           
+        else if (await DatabaseAccessor.TryAddEquipment(NewEquipment))
         {
             await NavigateTo(Shell.Current.GoToAsync(".."));
             await NotificationDisplayer.DisplayNotificationOperationSuccessful($"[Add equipment {NewEquipment.Name}]");

@@ -12,6 +12,11 @@
 
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
 
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource ActivityIndicatorStyle}"/>
+        
         <Grid
             RowDefinitions="Auto,*,Auto"
             IsVisible="{Binding IsInternetAvailable}">
@@ -20,7 +25,8 @@
                 x:Name="searchBar"  
                 Grid.Row="0"
                 SearchCommand="{Binding PerformSearchCommand}"
-                SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
+                SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}" 
+                Style="{StaticResource BaseSearchBar}"/>
 
             <ScrollView
                 Grid.Row="1">
@@ -32,14 +38,14 @@
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="utils:TargetType">
-                            <Frame>
+                            <Frame Style="{StaticResource CardView}" Margin="0,0,0,20">
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer 
-                                        NumberOfTapsRequired="2"
+                                        NumberOfTapsRequired="1"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TransferPageVM}},Path=TransferCommand}"
                                         CommandParameter="{Binding TargetID}"/>
                                 </Frame.GestureRecognizers>
-                                <Label Text="{Binding TargetName}"/>
+                                <Label Style="{StaticResource BigLabel}" Text="{Binding TargetName}"/>
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -48,11 +54,11 @@
 
             <HorizontalStackLayout
                 Grid.Row="2">
-                <Button 
+                <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}" 
                     Text="Refresh"
                     Command="{Binding RefreshCommand}"
                     CommandParameter="{Binding FalseValue}"/>
-                <Button
+                <Button IsEnabled="{Binding IsNotBusy}"  Style="{StaticResource ButtonOutline}"
                     Text=">"
                     Command="{Binding LoadNextPageCommand}"/>
                

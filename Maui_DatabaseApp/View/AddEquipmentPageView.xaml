@@ -3,31 +3,49 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Maui_DatabaseApp.View.AddEquipmentPageView"
              xmlns:controls ="clr-namespace:Maui_DatabaseApp.Controls"
+             xmlns:utils ="clr-namespace:Maui_DatabaseApp.Utils"
              xmlns:vm="clr-namespace:Maui_DatabaseApp.ViewModel"
              x:DataType="vm:AddEquipmentPageVM"
              Title="AddEquipmentPageView">
 
+    <ContentPage.Resources>
+        <Style x:Key="PosIntegerEntryStyle" BasedOn="{StaticResource BaseEntryStyle}" TargetType="Entry">
+            <Setter Property="utils:PositiveIntegerValidationBehaviorStyle.AttachBehavior" Value="true" />
+            <Setter Property="ToolTipProperties.Text" Value="Must be a possibly valid phone number."/>
+        </Style>
+    </ContentPage.Resources>
+    
     <Grid>
         <controls:InternetConnectionControl IsVisible="{Binding IsInternetNotAvailable}"/>
-      
+
+
+        <ActivityIndicator 
+            IsVisible="{Binding IsBusy}" 
+            IsRunning="{Binding IsBusy}" 
+            Style="{StaticResource ActivityIndicatorStyle}"/>
 
         <Grid
+            HorizontalOptions="Center"
             IsVisible="{Binding IsInternetAvailable}"
-            RowDefinitions="Auto,Auto,50">
+            RowDefinitions="Auto,Auto,Auto">
 
             <HorizontalStackLayout
+                Style="{StaticResource HorizontalStackLayoutStyle}"
                 Grid.Row="0">
-                <Label Text="Equipment Name"/>
-                <Entry Text="{Binding NewEquipment.Name}"/>
+                <Label Text="Name: " Style="{StaticResource BigWidthLabel}"/>
+                <Entry Style="{StaticResource BaseEntryStyle}" Text="{Binding NewEquipment.Name}"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout
+                 Style="{StaticResource HorizontalStackLayoutStyle}"
                  Grid.Row="1">
-                <Label Text="Location"/>
-                <Entry Text="{Binding NewEquipment.Quantity}"/>
+                <Label Text="Quantity: " Style="{StaticResource BigWidthLabel}"/>
+                <Entry Style="{StaticResource PosIntegerEntryStyle}" Text="{Binding NewEquipment.Quantity}"/>
             </HorizontalStackLayout>
 
-            <Button
+            <Button IsEnabled="{Binding IsNotBusy}"  
+                Style="{StaticResource ButtonOutline}"
+                WidthRequest="50"
                 Grid.Row="2"
                 Text="+"
                 Command="{Binding AddEquipmentCommand}"/>

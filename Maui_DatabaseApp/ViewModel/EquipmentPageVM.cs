@@ -6,9 +6,9 @@ namespace Maui_DatabaseApp.ViewModel;
 public partial class EquipmentPageVM : BaseVM
 {
 	[ObservableProperty]
-	int takeAmount = 10;
+	int takeAmount = Globals.TAKE_AMOUNT + 2;
 
-	[ObservableProperty]
+    [ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(IsDisplayingEquipmentToTransfer))]
 	bool isNotDisplayingEquipmentToTransfer = true;
 
@@ -79,6 +79,7 @@ public partial class EquipmentPageVM : BaseVM
 	[RelayCommand]
 	async Task PerformSearch(string substring)
 	{
+		IsBusy= true;
         if (string.IsNullOrWhiteSpace(substring))
         {
             EquipmentToDisplay = new();
@@ -87,6 +88,7 @@ public partial class EquipmentPageVM : BaseVM
         {
             EquipmentToDisplay = await DatabaseAccessor.GetEquipmentByNameSubstring(substring) ?? new();
         }
+		IsBusy= false;
     }
 
 	[RelayCommand]
@@ -119,7 +121,7 @@ public partial class EquipmentPageVM : BaseVM
 	[RelayCommand]
 	async Task NavToTransferPage(bool transferToBin)
 	{
-		
+		IsBusy= true;
 		if(transferToBin)
 		{
 			if (await DatabaseAccessor.TryMoveEquipmentToBin(EquipmentToTransfer))
@@ -144,7 +146,7 @@ public partial class EquipmentPageVM : BaseVM
 			}));
 
 		}
-
+		IsBusy= false;
     }
 
 	[RelayCommand]
@@ -184,7 +186,9 @@ public partial class EquipmentPageVM : BaseVM
 	[RelayCommand]
 	void ClearEquipmentToTransfer()
 	{
+		IsBusy= true;
 		EquipmentToTransfer = new();
 		eqpToTransferIDs = new();
+		IsBusy= false;
 	}
 }

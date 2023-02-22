@@ -13,6 +13,110 @@
             
             <utils:DateOnlyToDateTime x:Key="dateOnlyToDateTimeConverter" />
             <utils:IsThisFestivalEquipment x:Key="isThisFestivalEquipmentConverter" />
+
+            <Color x:Key="Primary">#FFC107</Color>
+            <Color x:Key="PrimaryDark">#FFA000</Color>
+            <Color x:Key="Accent">#00BCD4</Color>
+
+            <Color x:Key="LightBackground">#FAF9F8</Color>
+            <Color x:Key="DarkBackground">#Black</Color>
+
+            <Color x:Key="LabelText">#1F1F1F</Color>
+            <Color x:Key="LabelTextDark">White</Color>
+            
+            <Color x:Key="CardBackground">White</Color>
+            <Color x:Key="CardBackgroundDark">#1C1C1E</Color>
+
+            <Style TargetType="Page" ApplyToDerivedTypes="True">
+                <Setter Property="BackgroundColor"
+                        Value="{AppThemeBinding Light={StaticResource LightBackground}, 
+                        Dark={StaticResource DarkBackground}}"/>
+            </Style>
+
+            <Style TargetType="SearchBar" x:Key="BaseSearchBar">
+                <Setter Property="WidthRequest" Value="300"/>
+                <Setter Property="HeightRequest" Value="50"/>
+                <Setter Property="Margin" Value="50"/>
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, 
+                        Dark={StaticResource DarkBackground}}"/>
+                
+            </Style>
+
+            <Style TargetType="Label" x:Key="BaseLabel">
+                <Setter Property="FontFamily" Value="OpenSansRegular"/>
+                <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+                <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+                <Setter Property="TextColor" 
+                        Value="{AppThemeBinding Light={StaticResource LabelText}, 
+                        Dark={StaticResource LabelTextDark}}"/>
+                
+            </Style>
+
+            <Style x:Key="ButtonOutline" TargetType="Button">
+                <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightBackground}, 
+                        Dark={StaticResource DarkBackground}}"/>
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LabelText}, 
+                        Dark={StaticResource LabelTextDark}}"/>
+                <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Primary}, 
+                        Dark={StaticResource PrimaryDark}}"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="HeightRequest" Value="40"/>
+                <Setter Property="CornerRadius" Value="20"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
+            <Style x:Key="HorizontalStackLayoutStyle" TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="4"/>
+                <Setter Property="Padding" Value="4"/>
+                <Setter Property="Margin" Value="4"/>
+            </Style>
+
+            <Style x:Key="BaseEntryStyle" TargetType="Entry">
+                <Setter Property="MaxLength" Value="25"/>
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, 
+                        Dark={StaticResource DarkBackground}}" />
+                <Setter Property="WidthRequest" Value="150"/>
+                <Setter Property="utils:TextValidationBehaviorStyle.AttachBehavior" Value="true" />
+                <Setter Property="ToolTipProperties.Text" Value="Must contain at least two characters."/>
+            </Style>
+
+            <Style x:Key="ActivityIndicatorStyle" TargetType="ActivityIndicator">
+                <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, 
+                        Dark={StaticResource PrimaryDark}}"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+            
+            <Style x:Key="CardView" TargetType="Frame">
+                <Setter Property="BorderColor" Value="#DDDDDD"/>
+                <Setter Property="HasShadow" Value="True"/>
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CardBackground}, 
+                        Dark={StaticResource CardBackgroundDark}}"/>
+                <Setter Property="WidthRequest" Value="140"/>
+                <Setter Property="HeightRequest" Value="80"/>
+                <Setter Property="CornerRadius" Value="10"/>
+                <Setter Property="IsClippedToBounds" Value="True"/>
+
+
+            </Style>
+
+            <Style TargetType="Label" x:Key="SmallLabel" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="12"/>
+            </Style>
+
+            <Style TargetType="Label" x:Key="MediumLabel" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="15"/>
+            </Style>
+
+            <Style TargetType="Label" x:Key="BigLabel" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+
+            <Style x:Key="BigWidthLabel" TargetType="Label" BasedOn="{StaticResource BigLabel}">
+                <Setter Property="WidthRequest" Value="100"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

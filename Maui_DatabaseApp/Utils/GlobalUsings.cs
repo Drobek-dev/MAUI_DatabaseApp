@@ -7,17 +7,22 @@ global using Maui_DatabaseApp.Model.Entities;
 global using Microsoft.EntityFrameworkCore;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
+using System.Text.RegularExpressions;
 
 namespace Maui_DatabaseApp.Utils
 { 
 
-    public static class Globals
+    public static partial class Globals
     {
+        public const int TAKE_AMOUNT = 10;
 
         public static DateOnly GetTodaysDayOnly()
         {
             return DateOnly.FromDateTime(DateTime.Now);
         }
+
+        [GeneratedRegex("^\\+?[1-9][0-9]{7,14}$", RegexOptions.Compiled)]
+        public static partial Regex MyPhoneRegex();
 
     }
 
