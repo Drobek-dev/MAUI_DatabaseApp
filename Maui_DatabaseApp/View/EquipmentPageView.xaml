@@ -147,12 +147,16 @@
                             <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="No equipment is selected."/>
                         </CollectionView.EmptyView>
                         <CollectionView.ItemsLayout>
-                            <GridItemsLayout Orientation="Vertical" Span="3"></GridItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" Span="2"></GridItemsLayout>
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="entities:Equipment">
                                 <Frame Style="{StaticResource CardView}">
-                                    <Label Text="{Binding Name}"/>
+                                    
+                                    <VerticalStackLayout >
+                                        <Label Text="{Binding Name}" Style="{StaticResource BigLabel}"/>
+                                        <Label Text="{Binding Quantity,StringFormat='Quantity: {0}'}" Style="{StaticResource SmallLabel}"/>
+                                    </VerticalStackLayout>
                                 </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>

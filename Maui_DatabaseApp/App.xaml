@@ -44,8 +44,7 @@
 
             <Style TargetType="Label" x:Key="BaseLabel">
                 <Setter Property="FontFamily" Value="OpenSansRegular"/>
-                <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
-                <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+                <Setter Property="VerticalOptions" Value="Start"/>
                 <Setter Property="TextColor" 
                         Value="{AppThemeBinding Light={StaticResource LabelText}, 
                         Dark={StaticResource LabelTextDark}}"/>

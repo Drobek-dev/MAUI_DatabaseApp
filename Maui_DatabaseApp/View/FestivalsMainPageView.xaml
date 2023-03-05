@@ -65,7 +65,7 @@
                                         CommandParameter="{Binding .}"/>
                                 </Frame.GestureRecognizers>
                                 <VerticalStackLayout VerticalOptions="Center">
-                                    <Label Style="{StaticResource BigLabel}" VerticalTextAlignment="Start"  Text="{Binding Name}"/>
+                                    <Label Style="{StaticResource BigLabel}" VerticalTextAlignment="Center"  Text="{Binding Name}"/>
                                     <Label Style="{StaticResource SmallLabel}" VerticalTextAlignment="Center" Text="{Binding Location, StringFormat='Location: {0}'}"/>
                                     
                                 </VerticalStackLayout>
